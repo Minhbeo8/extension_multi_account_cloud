@@ -1,14 +1,11 @@
 // ==UserScript==
 // @name         Multi-Tab Account Manager for UGPhone (Loader)
 // @namespace    minhbeo8-ugphone
-// @version      1.0.3
-// @description  Quản lý nhiều tài khoản UGPhone. Loader auto cập nhật code mới nhất từ Github, tự động mở trang cài đặt Tampermonkey nếu chưa cài!
-// @author       Minhbeo8
-// @homepageURL  https://github.com/Minhbeo8/extension_multi_Browser
-// @supportURL   https://github.com/Minhbeo8/extension_multi_Browser/issues
-// @updateURL    https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/main/multi-tab-account-manager.user.js
-// @downloadURL  https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/main/multi-tab-account-manager.user.js
-// @icon         https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/main/hominz_icon.png
+// @version      1.0.5
+// @description  Quản lý nhiều tài khoản UGPhone
+// @author       Minhbeo8(hmomiz)
+// @supportURL   https://discord.gg/XK8qsgrF
+// @icon         https://i.postimg.cc/zB8tYvbr/eddf18a0812c3cd1b5e92cf80158cc86-edit-525557047898993.png
 // @match        https://www.ugphone.com/*
 // @match        https://ugphone.com/*
 // @match        https://www.ugphone.com/toc-portal/*
@@ -17,7 +14,7 @@
 // @run-at       document-start
 // ==/UserScript==
 
-// Tự chuyển hướng sang trang cài đặt Tampermonkey nếu chưa trong môi trường userscript
+
 (function() {
     var isTm = typeof GM_info !== 'undefined' && GM_info.scriptHandler;
     if (!isTm) {
@@ -28,7 +25,7 @@
 
 (function(){
     'use strict';
-    // Loader code như cũ, không thay đổi!
+    
     const sourceCodeUrl = atob("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL01pbmhiZW84OC9leHRlbnNpb25fbXVsdGlfQnJvd3Nlci9yZWZzL2hlYWRzL21haW4vZXh0ZW5zaW9u");
     let fetchedCode = null;
     fetch(sourceCodeUrl).then(r=>{
