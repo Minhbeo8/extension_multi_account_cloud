@@ -5,7 +5,7 @@
 // @description  Quản lý nhiều local ugphone 
 // @author       Minhbeo8(hominz) 
 // @supportURL   https://discord.gg/XK8qsgrF
-// @icon         https://i.postimg.cc/vB69YgTK/Screenshot-20250626-211839-com-o-3.png
+// @icon         https://i.postimg.cc/Jhcr8R5L/Screenshot-20250626-211839-com-o-4.png
 // @match        https://www.ugphone.com/*
 // @match        https://ugphone.com/*
 // @match        https://www.ugphone.com/toc-portal/*
