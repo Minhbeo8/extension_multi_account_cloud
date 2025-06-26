@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Multi-Tab Account Manager for UGPhone
 // @namespace    http://tampermonkey.net/
-// @version      3.8
+// @version      3.8.1
 // @description  Quản lý nhiều tài khoản
 // @author       Minhbeo8
 // @match        https://www.ugphone.com/*
@@ -380,7 +380,7 @@
                 <h2>🗂️ Quản lý tài khoản</h2>
                 <div style="font-size:11px;text-align:right;opacity:0.7;">Kéo icon để đổi vị trí, click để mở menu.</div>
                 <div style="font-size:12px;color:#fffbe0;background:#e67e22;padding:7px 13px;border-radius:8px;margin:10px 0 10px 0;text-align:center;">
-                  <b>Lưu ý:</b> Hãy nhớ <u>lưu tài khoản hiện tại</u> lại trước khi mở hoặc chuyển sang tab mới. Nếu không, mọi dữ liệu đăng nhập sẽ bị mất!
+                  <b>Lưu ý:</b> Hãy nhớ <u>lưu tài khoản hiện tại</u> lại trước khi mở hoặc chuyển sang tab mới. Nếu không, mọi dữ liệu đăng nhập sẽ bị mất[...]
                 </div>
                 <div class="tab-info current-tab">
                     <h3>Tab hiện tại</h3>
@@ -572,12 +572,20 @@
         }
         openNewCleanTab() {
             GM_setValue('clean_next_tab', true);
-            GM_openInTab(window.location.origin + '/toc-portal/', {
-                active: true,
-                insert: true,
-                setParent: false
-            });
-            alert('Đã mở tab mới!');
+            // Hỗ trợ mọi môi trường (PC/mobile, browser nào cũng được)
+            if (typeof GM_openInTab === "function") {
+                GM_openInTab(window.location.origin + '/toc-portal/', {
+                    active: true,
+                    insert: true,
+                    setParent: false
+                });
+            } else {
+                window.open(window.location.origin + '/toc-portal/', '_blank');
+            }
+            // alert sau khi gọi mở tab
+            setTimeout(() => {
+                alert('Đã mở tab mới!');
+            }, 100);
         }
         openNewTabWithAccount() {
             const accountIds = Object.keys(this.accounts);
@@ -592,12 +600,18 @@
             const index = parseInt(accountId) - 1;
             if (index >= 0 && index < accountIds.length) {
                 GM_setValue('next_tab_account', accountIds[index]);
-                GM_openInTab(window.location.origin + '/toc-portal/', {
-                    active: true,
-                    insert: true,
-                    setParent: false
-                });
-                alert('Đã mở tab mới với tài khoản đã chọn!');
+                if (typeof GM_openInTab === "function") {
+                    GM_openInTab(window.location.origin + '/toc-portal/', {
+                        active: true,
+                        insert: true,
+                        setParent: false
+                    });
+                } else {
+                    window.open(window.location.origin + '/toc-portal/', '_blank');
+                }
+                setTimeout(() => {
+                    alert('Đã mở tab mới với tài khoản đã chọn!');
+                }, 100);
             }
         }
         getCurrentLocalStorage() {
