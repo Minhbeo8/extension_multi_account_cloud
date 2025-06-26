@@ -23,19 +23,28 @@
 (function() {
     'use strict';
 
-    // Kiểm tra Tampermonkey
-    var isTm = typeof GM_info !== 'undefined' && GM_info.scriptHandler;
-    if (!isTm) {
-        var rawLink = "https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/main/multi-tab-account-manager.user.js";
-        location.href = "https://tampermonkey.net/?ext=dhdg&updated=true#url=" + encodeURIComponent(rawLink);
-        return;
+    function decodeBase64(encodedString) {
+        try {
+            return atob(encodedString);
+        } catch (e) {
+            console.error("[Minhbeo8 Loader] Lỗi khi giải mã Base64:", e);
+            return "";
+        }
     }
 
-    // Đường dẫn mã nguồn chính (đúng chuẩn RAW)
-    const sourceCodeUrl = "https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/main/extension";
+    const encodedSourceCodeUrl = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL01pbmhiZW84L2V4dGVuc2lvbl9tdWx0aV9Ccm93c2VyL21haW4vZXh0ZW5zaW9u";
+    const sourceCodeUrl = decodeBase64(encodedSourceCodeUrl);
 
     let fetchedCode = null;
     let isInitialized = false;
+
+    var isTm = typeof GM_info !== 'undefined' && GM_info.scriptHandler;
+    if (!isTm) {
+        const encodedRawLinkTm = "aHR0cHM6Ly90YW1wZXJtb25rZXkubmV0P2V4dD1kaGRnJnVwZGF0ZWQ9dHJ1ZSN1cmw9aHR0cHMlM0ElMkYlMkZyYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tJTJGTWluaGJlbyU4JTJGMGV4dGVuc2lvbl9tdWx0aV9Ccm93c2VyJTJGbWFpbiUyRm11bHRpLXRhYi1hY2NvdW50LW1hbmFnZXIudXNlci5qcw==";
+        const rawLinkTm = decodeBase64(encodedRawLinkTm);
+        location.href = rawLinkTm;
+        return;
+    }
 
     function loadSourceCode(retryCount = 0) {
         const maxRetries = 3;
@@ -97,68 +106,36 @@
         });
     }
 
-    function main() {
+    function executeScript() {
         if (isInitialized || !fetchedCode) return;
         isInitialized = true;
 
-        if (typeof observer !== 'undefined') observer.disconnect();
-
         try {
-            // Polyfill storage (nếu cần)
-            if (typeof getStorage === 'undefined') {
-                window.getStorage = (key, def) => { try { return GM_getValue(key, def); } catch(e) { return def; } };
-            }
-            if (typeof setStorage === 'undefined') {
-                window.setStorage = (key, v) => { try { GM_setValue(key, v); } catch(e){} };
-            }
-            if (typeof deleteStorage === 'undefined') {
-                window.deleteStorage = (key) => { try { GM_deleteValue(key); } catch(e){} };
-            }
             eval(fetchedCode);
             console.log("[Minhbeo8 Loader] Đã thực thi mã nguồn chính!");
         } catch (e) {
             console.error("[Minhbeo8 Loader] Lỗi khi thực thi mã nguồn chính:", e);
-            showErrorBox("Lỗi khi thực thi mã nguồn chính", e.message || e.toString());
         }
     }
-
-    function showErrorBox(title, msg) {
-        if (!document.body) return;
-        const errorDiv = document.createElement('div');
-        errorDiv.style.cssText = `
-            position: fixed; top: 20px; right: 20px; z-index: 99999;
-            background: #ff4444; color: white; padding: 15px; border-radius: 8px;
-            font-family: monospace; font-size: 12px; max-width: 350px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        `;
-        errorDiv.innerHTML = `
-            <strong>⚠️ ${title}:</strong><br>
-            <div style="margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.2); border-radius: 4px;">
-                ${msg}
-            </div>
-            <div style="margin-top: 8px; font-size: 10px; opacity: 0.8;">
-                Nhấn để đóng sau 15 giây
-            </div>
-        `;
-        errorDiv.onclick = () => errorDiv.remove();
-        document.body.appendChild(errorDiv);
-        setTimeout(() => errorDiv.remove(), 15000);
-    }
-
-    // DOM observer để đảm bảo chạy khi body tạo xong
-    const observer = new MutationObserver(() => { if (document.body && fetchedCode) main(); });
 
     function initialize() {
         console.log("[Minhbeo8 Loader] Đang khởi tạo...");
         loadSourceCode()
             .then(code => {
                 fetchedCode = code;
-                if (document.body) main();
-                else observer.observe(document.documentElement, { childList: true, subtree: true });
+                if (document.body) {
+                    executeScript();
+                } else {
+                    const checkBodyInterval = setInterval(() => {
+                        if (document.body) {
+                            clearInterval(checkBodyInterval);
+                            executeScript();
+                        }
+                    }, 50);
+                }
             })
             .catch(error => {
                 console.error("[Minhbeo8 Loader] Không thể tải mã nguồn:", error);
-                showErrorBox("Không thể tải extension", "Vui lòng kiểm tra kết nối mạng hoặc thử lại sau!");
             });
     }
 
