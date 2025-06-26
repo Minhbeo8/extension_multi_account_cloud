@@ -5,7 +5,7 @@
 // @description  Quản lý nhiều local ugphone 
 // @author       Minhbeo8(hominz) 
 // @supportURL   https://discord.gg/XK8qsgrF
-// @icon         https://github.com/Minhbeo8/extension_multi_Browser/blob/main/hominz.png
+// @icon         https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/main/hominz.png
 // @match        https://www.ugphone.com/*
 // @match        https://ugphone.com/*
 // @match        https://www.ugphone.com/toc-portal/*
@@ -18,7 +18,7 @@
 (function() {
     'use strict';
     
- 
+    // Kiểm tra Tampermonkey
     var isTm = typeof GM_info !== 'undefined' && GM_info.scriptHandler;
     if (!isTm) {
         var rawLink = "https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/main/multi-tab-account-manager.user.js";
@@ -31,7 +31,7 @@
     let fetchedCode = null;
     let isInitialized = false;
 
-    
+    // Hàm tải mã nguồn bằng GM_xmlhttpRequest
     function loadSourceCode() {
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
@@ -56,11 +56,12 @@
         });
     }
 
-    
+    // Hàm chính để thực thi mã
     function main() {
         if (isInitialized || !fetchedCode) return;
         isInitialized = true;
         
+        // Ngắt observer
         if (typeof observer !== 'undefined') {
             observer.disconnect();
         }
@@ -74,14 +75,14 @@
         }
     }
 
-    
+    // Observer để theo dõi DOM
     const observer = new MutationObserver(() => {
         if (document.body && fetchedCode) {
             main();
         }
     });
 
-   
+    // Bắt đầu quá trình
     function initialize() {
         console.log("Minhbeo8 Loader: Đang khởi tạo...");
         
@@ -90,11 +91,11 @@
                 fetchedCode = code;
                 console.log("Minhbeo8 Loader: Mã nguồn đã được tải.");
                 
-              
+                // Nếu DOM đã sẵn sàng thì chạy ngay
                 if (document.body) {
                     main();
                 } else {
-                    
+                    // Nếu chưa thì đợi DOM ready
                     observer.observe(document.documentElement, {
                         childList: true,
                         subtree: true
@@ -104,7 +105,7 @@
             .catch(error => {
                 console.error("Minhbeo8 Loader: Không thể tải mã nguồn:", error);
                 
-               
+                // Thử lại sau 3 giây
                 setTimeout(() => {
                     console.log("Minhbeo8 Loader: Đang thử lại...");
                     initialize();
@@ -112,6 +113,7 @@
             });
     }
 
+    // Bắt đầu khởi tạo
     initialize();
 
 })();
