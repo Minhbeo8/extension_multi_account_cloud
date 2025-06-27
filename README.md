@@ -48,7 +48,7 @@ Chức năng nổi bật:
 
 ## Liên hệ & Hỗ trợ
 
-- Discord: (https://discord.gg/GJdRjPqH
+- Discord: (https://discord.gg/GJdRjPqH)
 
 ---
 
