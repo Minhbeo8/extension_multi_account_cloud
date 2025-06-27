@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name         Multi-Tab Account Manager for UGPhone
+// @name         Multi-Tab Account Manager for UGPhone (Loader)
 // @namespace    minhbeo8-ugphone
-// @version      1.0.7
-// @description  Quản lý nhiều local ugphone
-// @author       Minhbeo8 (hominz)
+// @version      1.0.6
+// @description  Quản lý nhiều local ugphone 
+// @author       Minhbeo8(hominz) 
 // @supportURL   https://discord.gg/XK8qsgrF
-// @icon         https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/main/hominz.png
+// @icon         https://i.postimg.cc/Jhcr8R5L/hominz-png-4.png
 // @match        https://www.ugphone.com/*
 // @match        https://ugphone.com/*
 // @match        https://www.ugphone.com/toc-portal/*
