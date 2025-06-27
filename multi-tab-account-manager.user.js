@@ -1,43 +1,28 @@
 // ==UserScript==
-// @name         Multi-Tab Account Manager for UGPhone (Loader)
+// @name         Test Loader Raw
 // @namespace    minhbeo8-ugphone
-// @version      1.0.9
-// @description  Quản lý nhiều local ugphone 
-// @author       Minhbeo8(hominz) 
-// @supportURL   https://discord.gg/XK8qsgrF
-// @icon         https://i.postimg.cc/Jhcr8R5L/hominz-png-4.png
+// @version      1.0.1
+// @description  Test tải code raw trực tiếp
 // @match        https://www.ugphone.com/*
-// @match        https://ugphone.com/*
-// @match        https://www.ugphone.com/toc-portal/*
-// @match        https://ugphone.com/toc-portal/*
 // @grant        GM_xmlhttpRequest
-// @grant        GM_info
-// @grant        GM_addStyle
-// @grant        GM_getValue
-// @grant        GM_setValue
-// @grant        GM_deleteValue
-// @grant        GM_listValues
 // @run-at       document-start
 // ==/UserScript==
 
 (function() {
-    'use strict';
-    function decodeBase64(e) {
-        try { return atob(e); } catch (e) { return ""; }
-    }
-    const sourceUrl = decodeBase64("aHR0cHM6Ly9jZG4uanNkbGV2ci5uZXQvZ2gvTWluaGJlbzgvZXh0ZW5zaW9uX211bHRpX0Jyb3dzZXJAbWFpbi9leHRlbnNpb24uanM=");
+    const sourceUrl = "https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/main/extension.js";
     GM_xmlhttpRequest({
         method: "GET",
         url: sourceUrl,
         onload: function(response) {
-            if (response.status === 200 && response.responseText) {
+            if (response.status === 200) {
+                console.log("LOAD OK:", response.responseText.length);
                 eval(response.responseText);
             } else {
                 alert("Không tải được mã nguồn chính: " + response.status);
             }
         },
-        onerror: function() {
-            alert("Có lỗi khi tải mã nguồn chính!");
+        onerror: function(e) {
+            alert("Có lỗi khi tải mã nguồn chính! " + JSON.stringify(e));
         }
     });
 })();
