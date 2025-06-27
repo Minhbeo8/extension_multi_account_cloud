@@ -19,7 +19,7 @@
 (function() {
     'use strict';
 
-    // CSS cho giao diện
+    
     GM_addStyle(`
         #tabManager {
             position: fixed;
@@ -401,17 +401,18 @@
                     <button class="btn btn-info" id="openTabWithAccountBtn">Mở tab với tài khoản</button>
                     <button class="btn btn-danger" id="clearAllAccountsBtn">Xóa tất cả</button>
                 </div>
-                <div style="text-align:center;font-size:11px;opacity:0.5;margin-top:10px" id="minhbeo8-watermark">
-                    Made by Minhbeo8
+                <div style="text-align:center;font-size:11px;opacity:0.7;margin-top:10px" id="minhbeo8-watermark">
+                    <a href="https://discord.gg/GJdRjPqH" target="_blank" style="color:#fffbe0;text-decoration:underline;opacity:0.85;">
+                        Made by Minhbeo8
+                    </a>
                 </div>
             `;
         }
 
         attachEvents() {
             setTimeout(() => {
-                // Gán lại sự kiện cho từng nút delete sau mỗi lần render
-                this.updateAccountList(); // sẽ setup luôn các sự kiện xóa và chọn account
-
+                
+                this.updateAccountList(); 
                 const saveBtn = document.getElementById('saveAccountBtn');
                 const clearBtn = document.getElementById('clearTabBtn');
                 const openCleanBtn = document.getElementById('openCleanTabBtn');
@@ -429,6 +430,7 @@
             this.updateAccountList();
             this.updateCurrentAccountName();
         }
+
         updateCurrentAccountName() {
             const nameElement = document.getElementById('currentAccountName');
             if (nameElement) {
@@ -466,7 +468,7 @@
                 `;
             }).join('');
 
-            // Gán sự kiện click cho từng nút Xóa
+         
             container.querySelectorAll('.btn-delete-account').forEach(btn => {
                 btn.onclick = (e) => {
                     e.stopPropagation();
@@ -503,6 +505,7 @@
             alert(`Đã lưu tài khoản "${accountName}" thành công!`);
             this.refreshUI();
         }
+
         selectAccount(accountId) {
             if (!this.accounts[accountId]) return;
             const account = this.accounts[accountId];
@@ -516,6 +519,7 @@
                 setTimeout(() => location.reload(), 1000);
             }, 500);
         }
+
         applyAccount(account) {
             Object.entries(account.localStorage).forEach(([key, value]) => {
                 try {
@@ -526,6 +530,7 @@
                 document.cookie = `${name}=${value}; path=/; domain=.ugphone.com; max-age=86400`;
             });
         }
+
         clearCurrentTab() {
             if (confirm('Bạn có chắc muốn đặt lại tab này không?')) {
                 this.clearCurrentData();
@@ -536,6 +541,7 @@
                 setTimeout(() => location.reload(), 1000);
             }
         }
+
         clearCurrentData() {
             const keysToRemove = [];
             for (let i = 0; i < localStorage.length; i++) {
@@ -547,6 +553,7 @@
             keysToRemove.forEach(key => localStorage.removeItem(key));
             this.clearAllCookies();
         }
+
         deleteAccount(accountId) {
             const account = this.accounts[accountId];
             if (confirm(`Xóa tài khoản "${account.name}"?`)) {
@@ -560,6 +567,7 @@
                 alert(`Đã xóa tài khoản "${account.name}".`);
             }
         }
+
         clearAllAccounts() {
             if (confirm('Bạn có chắc muốn xóa tất cả tài khoản đã lưu?')) {
                 this.accounts = {};
@@ -570,9 +578,9 @@
                 alert('Đã xóa tất cả tài khoản!');
             }
         }
+
         openNewCleanTab() {
             GM_setValue('clean_next_tab', true);
-            // Hỗ trợ mọi môi trường (PC/mobile, browser nào cũng được)
             if (typeof GM_openInTab === "function") {
                 GM_openInTab(window.location.origin + '/toc-portal/', {
                     active: true,
@@ -582,11 +590,11 @@
             } else {
                 window.open(window.location.origin + '/toc-portal/', '_blank');
             }
-            // alert sau khi gọi mở tab
             setTimeout(() => {
                 alert('Đã mở tab mới!');
             }, 100);
         }
+
         openNewTabWithAccount() {
             const accountIds = Object.keys(this.accounts);
             if (accountIds.length === 0) {
@@ -614,6 +622,7 @@
                 }, 100);
             }
         }
+
         getCurrentLocalStorage() {
             const data = {};
             for (let i = 0; i < localStorage.length; i++) {
@@ -624,6 +633,7 @@
             }
             return data;
         }
+
         getCurrentCookies() {
             const cookies = {};
             document.cookie.split(';').forEach(cookie => {
@@ -634,6 +644,7 @@
             });
             return cookies;
         }
+
         checkNewTabAccount() {
             const nextAccount = GM_getValue('next_tab_account', null);
             if (nextAccount && this.accounts[nextAccount]) {
