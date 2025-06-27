@@ -145,7 +145,7 @@
             this.tabSessions = GM_getValue('tab_sessions', {});
             this.currentAccount = null;
 
-            // Dragging variables
+            
             this.isDragging = false;
             this.dragOffset = { x: 0, y: 0 };
             this.lastPointerDown = {x: 0, y: 0, t: 0};
@@ -477,7 +477,7 @@
                 };
             });
 
-            // Gán sự kiện chọn account cho cả khối
+            
             container.querySelectorAll('.account-item').forEach(item => {
                 item.onclick = (e) => {
                     if (e.target.classList.contains('btn-delete-account')) return;
