@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Multi-Tab Account Manager for UGPhone (Loader)
 // @namespace    minhbeo8-ugphone
-// @version      1.0.6
+// @version      1.0.8
 // @description  Quản lý nhiều local ugphone 
 // @author       Minhbeo8(hominz) 
 // @supportURL   https://discord.gg/XK8qsgrF
@@ -23,13 +23,9 @@
 (function() {
     'use strict';
     function decodeBase64(e) {
-        try {
-            return atob(e);
-        } catch (e) {
-            return "";
-        }
+        try { return atob(e); } catch (e) { return ""; }
     }
-    const sourceUrl = decodeBase64("aHR0cHM6Ly9jZG4uanNkbGV2ci5uZXQvZ2gvTWluaGJlbzgvZXh0ZW5zaW9uX211bHRpX0Jyb3dzZXJAbWFpbi9tdWx0aS10YWItYWNjb3VudC1tYW5hZ2VyLnVzZXIuanM=");
+    const sourceUrl = decodeBase64("aHR0cHM6Ly9jZG4uanNkbGV2ci5uZXQvZ2gvTWluaGJlbzgvZXh0ZW5zaW9uX211bHRpX0Jyb3dzZXJAdjEuMC44L211bHRpLXRhYi1hY2NvdW50LW1hbmFnZXIudXNlci5qcw==");
     let fetchedCode = null, isInitialized = false;
     function loadSourceCode(retryCount = 0) {
         const maxRetries = 3, retryDelay = 2000 * (retryCount + 1);
@@ -82,34 +78,7 @@
         isInitialized = true;
         if (typeof observer !== "undefined") observer.disconnect();
         try {
-            if (typeof getStorage === "undefined") {
-                window.getStorage = function(key, defaultValue) {
-                    try {
-                        return GM_getValue(key, defaultValue);
-                    } catch (e) {
-                        return defaultValue;
-                    }
-                }
-            }
-            if (typeof setStorage === "undefined") {
-                window.setStorage = function(key, value) {
-                    try {
-                        GM_setValue(key, value);
-                    } catch (e) {}
-                }
-            }
-            if (typeof deleteStorage === "undefined") {
-                window.deleteStorage = function(key) {
-                    try {
-                        GM_deleteValue(key);
-                    } catch (e) {}
-                }
-            }
-            const injectedCode = fetchedCode.replace(
-                /(<div[^>]*id=["']minhbeo8-watermark["'][^>]*>)[\s\S]*?(<\/div>)/,
-                '$1<a href="https://discord.gg/GJdRjPqH" target="_blank" style="color:#fffbe0;text-decoration:underline;opacity:0.85;">Made by Minhbeo8</a>$2'
-            );
-            eval(injectedCode);
+            eval(fetchedCode);
         } catch (e) {
             if (document.body) {
                 const errorDiv = document.createElement("div");
@@ -122,18 +91,13 @@
         }
     }
     const observer = new MutationObserver(() => {
-        if (document.body && fetchedCode) {
-            main();
-        }
+        if (document.body && fetchedCode) { main(); }
     });
     function initialize() {
         loadSourceCode().then(code => {
             fetchedCode = code;
-            if (document.body) {
-                main();
-            } else {
-                observer.observe(document.documentElement, { childList: true, subtree: true });
-            }
+            if (document.body) { main(); }
+            else { observer.observe(document.documentElement, { childList: true, subtree: true }); }
         }).catch(() => {});
     }
     initialize();
