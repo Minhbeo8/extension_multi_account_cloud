@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Multi-Tab Account Manager for UGPhone (Loader)
+// @name         Multi-Tab Account Manager for UGPhone
 // @namespace    minhbeo8-ugphone
 // @version      1.0.7
-// @description  Quản lý nhiều local ugphone, luôn tự động lấy mã nguồn mới nhất từ GitHub
+// @description  Quản lý nhiều local ugphone
 // @author       Minhbeo8 (hominz)
 // @supportURL   https://discord.gg/XK8qsgrF
 // @icon         https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/main/hominz.png
