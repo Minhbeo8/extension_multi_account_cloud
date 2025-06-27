@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Multi-Tab Account Manager for UGPhone (Loader)
 // @namespace    minhbeo8-ugphone
-// @version      1.0.6
+// @version      1.0.1
 // @description  Quản lý nhiều local ugphone 
 // @author       Minhbeo8(hominz) 
 // @supportURL   https://discord.gg/XK8qsgrF
