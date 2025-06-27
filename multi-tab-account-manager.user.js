@@ -9,7 +9,7 @@
 // ==/UserScript==
 
 (function() {
-    const sourceUrl = "https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/main/extension.js";
+    const sourceUrl = "https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/refs/heads/main/extension.js";
     GM_xmlhttpRequest({
         method: "GET",
         url: sourceUrl,
