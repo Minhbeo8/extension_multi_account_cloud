@@ -56,4 +56,4 @@ Chức năng nổi bật:
 
 MIT License
 
-Nếu reup, **vui lòng ghi nguồn Xin cảm ơn!**
+Nếu reup,vui lòng ghi nguồn Xin cảm ơn!
