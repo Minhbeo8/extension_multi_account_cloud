@@ -14,7 +14,7 @@ Chức năng nổi bật:
 
 1. **Cài đặt [Tampermonkey](https://tampermonkey.net/) cho trình duyệt của bạn.**
 2. **Cài đặt script qua link sau:**  
-   👉 [BẤM ĐỂ CÀI ĐẶT NGAY](https://cdn.jsdelivr.net/gh/Minhbeo8/extension_multi_Browser@main/multi-tab-account-manager.user.js)
+   👉 [BẤM ĐỂ CÀI ĐẶT NGAY](https://cdn.jsdelivr.net/gh/Minhbeo8/extension_multi_Browser@v1.0.1/multi-tab-account-manager.user.js)
 3. Vào trang [https://ugphone.com](https://ugphone.com) hoặc [https://www.ugphone.com](https://www.ugphone.com).
 4. Bạn sẽ thấy nút 🗂️ ở góc phải trên. Click vào để mở menu quản lý tài khoản.
 
