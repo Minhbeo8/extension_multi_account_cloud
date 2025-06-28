@@ -1,0 +1,527 @@
+// ==UserScript==
+// @name         Multi-Tab Account Manager for UGPhone & VMOS Cloud
+// @namespace    http://tampermonkey.net/
+// @version      4.0.0
+// @description  Quản lý nhiều tài khoản cho UGPhone & VMOS Cloud
+// @author       Minhbeo8
+// @match        https://www.ugphone.com/*
+// @match        https://ugphone.com/*
+// @match        https://www.ugphone.com/toc-portal/*
+// @match        https://ugphone.com/toc-portal/*
+// @match        https://cloud.vmos.com/*
+// @match        https://*.cloud.vmos.com/*
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_deleteValue
+// @grant        GM_listValues
+// @grant        GM_addStyle
+// @grant        GM_openInTab
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    GM_addStyle(`
+        #tabManager {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            z-index: 10000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            min-width: 350px;
+            max-width: 98vw;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        /* ...CSS giữ nguyên như cũ... */
+    `);
+
+    class MultiTabAccountManager {
+        constructor() {
+            this.tabId = this.getTabId();
+            this.accounts = GM_getValue('saved_accounts', {});
+            this.tabSessions = GM_getValue('tab_sessions', {});
+            this.currentAccount = null;
+
+            this.isDragging = false;
+            this.dragOffset = { x: 0, y: 0 };
+            this.lastPointerDown = {x: 0, y: 0, t: 0};
+
+            this.init();
+        }
+
+        getTabId() {
+            let tabId = sessionStorage.getItem('multiTabId');
+            if (!tabId) {
+                tabId = 'tab_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+                sessionStorage.setItem('multiTabId', tabId);
+            }
+            return tabId;
+        }
+
+        init() {
+            this.checkAndSetupCleanTab();
+            this.registerTab();
+            this.loadTabAccount();
+            this.createUI();
+            this.setupDragging();
+            this.cleanupClosedTabs();
+            setInterval(() => { this.updateTabActivity(); }, 5000);
+        }
+
+        // ------- Thêm các hàm mới cho VMOS Cloud ---------
+
+        getAllCookies() {
+            const cookies = {};
+            document.cookie.split(';').forEach(cookie => {
+                const [name, ...rest] = cookie.trim().split('=');
+                if (name) cookies[name] = rest.join('=');
+            });
+            return cookies;
+        }
+        setAllCookies(cookieObj) {
+            // Auto detect domain
+            const host = window.location.hostname;
+            let domain = '';
+            if (host.endsWith('cloud.vmos.com')) {
+                domain = '.cloud.vmos.com';
+            } else if (host.endsWith('ugphone.com')) {
+                domain = '.ugphone.com';
+            } else {
+                domain = host;
+            }
+            Object.entries(cookieObj).forEach(([name, value]) => {
+                document.cookie = `${name}=${value}; path=/; domain=${domain}; max-age=86400`;
+            });
+        }
+        clearAllCookies() {
+            const cookies = document.cookie.split(';');
+            cookies.forEach(cookie => {
+                const eqPos = cookie.indexOf('=');
+                const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+                if (name) {
+                    const domains = ['', '.ugphone.com', '.cloud.vmos.com', window.location.hostname];
+                    const paths = ['/', '/toc-portal/', '/toc-portal'];
+                    domains.forEach(domain => {
+                        paths.forEach(path => {
+                            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}; domain=${domain}`;
+                        });
+                    });
+                }
+            });
+        }
+        getAllLocalStorage() {
+            const data = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && !key.startsWith('GM_') && !key.includes('tampermonkey')) {
+                    data[key] = localStorage.getItem(key);
+                }
+            }
+            return data;
+        }
+        setAllLocalStorage(data) {
+            Object.entries(data).forEach(([key, value]) => {
+                try { localStorage.setItem(key, value); } catch (e) {}
+            });
+        }
+        clearAllLocalStorage() {
+            const keysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && !key.startsWith('GM_') && !key.includes('tampermonkey')) {
+                    keysToRemove.push(key);
+                }
+            }
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+        }
+        getAllSessionStorage() {
+            const data = {};
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                if (key && key !== 'multiTabId' && key !== 'isCleanTab') {
+                    data[key] = sessionStorage.getItem(key);
+                }
+            }
+            return data;
+        }
+        setAllSessionStorage(data) {
+            Object.entries(data).forEach(([key, value]) => {
+                try { sessionStorage.setItem(key, value); } catch (e) {}
+            });
+        }
+        clearAllSessionStorage() {
+            const keysToRemove = [];
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                if (key && key !== 'multiTabId' && key !== 'isCleanTab') {
+                    keysToRemove.push(key);
+                }
+            }
+            keysToRemove.forEach(key => sessionStorage.removeItem(key));
+        }
+
+        // ----------- Các hàm cũ vẫn giữ lại ----------
+
+        checkAndSetupCleanTab() {
+            const shouldClean = GM_getValue('clean_next_tab', false);
+            if (shouldClean) {
+                GM_deleteValue('clean_next_tab');
+                this.forceCleanTab();
+                sessionStorage.setItem('isCleanTab', 'true');
+            }
+        }
+
+        forceCleanTab() {
+            this.clearAllLocalStorage();
+            this.clearAllCookies();
+            this.clearAllSessionStorage();
+        }
+
+        registerTab() {
+            this.tabSessions[this.tabId] = {
+                id: this.tabId,
+                url: window.location.href,
+                title: document.title || 'UGPhone/VMOS',
+                lastActivity: Date.now(),
+                account: this.currentAccount,
+                created: this.tabSessions[this.tabId]?.created || Date.now(),
+                isClean: sessionStorage.getItem('isCleanTab') === 'true'
+            };
+            GM_setValue('tab_sessions', this.tabSessions);
+        }
+
+        updateTabActivity() {
+            if (this.tabSessions[this.tabId]) {
+                this.tabSessions[this.tabId].lastActivity = Date.now();
+                this.tabSessions[this.tabId].account = this.currentAccount;
+                GM_setValue('tab_sessions', this.tabSessions);
+            }
+        }
+
+        cleanupClosedTabs() {
+            const now = Date.now();
+            let changed = false;
+            Object.keys(this.tabSessions).forEach(tabId => {
+                if (tabId !== this.tabId && (now - this.tabSessions[tabId].lastActivity) > 30000) {
+                    delete this.tabSessions[tabId];
+                    changed = true;
+                }
+            });
+            if (changed) GM_setValue('tab_sessions', this.tabSessions);
+        }
+
+        loadTabAccount() {
+            const tabInfo = this.tabSessions[this.tabId];
+            if (tabInfo && tabInfo.account && this.accounts[tabInfo.account] && !tabInfo.isClean) {
+                this.currentAccount = tabInfo.account;
+                this.applyAccount(this.accounts[tabInfo.account]);
+            }
+        }
+
+        createUI() {
+            // Giữ nguyên UI như cũ
+            const savedPos = GM_getValue('toggle_button_position', { top: 20, left: window.innerWidth - 180 });
+            const toggleBtn = document.createElement('button');
+            toggleBtn.id = 'toggleBtn';
+            toggleBtn.innerHTML = '🗂️';
+            toggleBtn.title = "Quản lý tài khoản (Kéo thả hoặc nhấn vào)";
+            toggleBtn.style.top = savedPos.top + 'px';
+            toggleBtn.style.left = savedPos.left + 'px';
+            toggleBtn.style.position = 'fixed';
+            document.body.appendChild(toggleBtn);
+
+            const panel = document.createElement('div');
+            panel.id = 'tabManager';
+            panel.style.display = 'none';
+            panel.innerHTML = this.getUIHTML();
+            document.body.appendChild(panel);
+
+            this.attachEvents();
+        }
+
+        setupDragging() {
+            // ...giữ nguyên code...
+        }
+
+        toggleMenu() {
+            const panel = document.getElementById('tabManager');
+            if (!panel) return;
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            if (panel.style.display === 'block') this.refreshUI();
+        }
+
+        getUIHTML() {
+            // ...giữ nguyên code...
+            return `
+                <h2>🗂️ Quản lý tài khoản</h2>
+                <div style="font-size:11px;text-align:right;opacity:0.7;">Kéo icon để đổi vị trí, click để mở menu.</div>
+                <div style="font-size:12px;color:#fffbe0;background:#e67e22;padding:7px 13px;border-radius:8px;margin:10px 0 10px 0;text-align:center;">
+                  <b>Lưu ý:</b> Hãy nhớ <u>lưu tài khoản hiện tại</u> lại trước khi mở hoặc chuyển sang tab mới. Nếu không, mọi dữ liệu đăng nhập sẽ bị mất. Đã hỗ trợ VMOS Cloud!
+                </div>
+                <div class="tab-info current-tab">
+                    <h3>Tab hiện tại</h3>
+                    <div><strong>ID:</strong> ${this.tabId}</div>
+                    <div><strong>Tài khoản:</strong> <span id="currentAccountName">${this.currentAccount ? this.accounts[this.currentAccount]?.name || 'Chưa chọn' : 'Chưa chọn'}</span></div>
+                    <div><strong>Loại tab:</strong> ${sessionStorage.getItem('isCleanTab') === 'true' ? 'Tab mới' : 'Tab thường'}</div>
+                    <div class="flex-row" style="margin-top: 10px;">
+                        <button class="btn btn-primary" id="saveAccountBtn">Lưu tài khoản</button>
+                        <button class="btn btn-warning" id="clearTabBtn">Đặt lại tab</button>
+                    </div>
+                </div>
+                <div class="account-selector">
+                    <h3>Chọn tài khoản cho tab này</h3>
+                    <div id="accountList"></div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button class="btn btn-info" id="openCleanTabBtn">Mở tab mới</button>
+                    <button class="btn btn-info" id="openTabWithAccountBtn">Mở tab với tài khoản</button>
+                    <button class="btn btn-danger" id="clearAllAccountsBtn">Xóa tất cả</button>
+                </div>
+                <div style="text-align:center;font-size:11px;opacity:0.7;margin-top:10px" id="minhbeo8-watermark">
+                    <a href="https://discord.gg/GJdRjPqH" target="_blank" style="color:#fffbe0;text-decoration:underline;opacity:0.85;">
+                        Made by Minhbeo8
+                    </a>
+                </div>
+            `;
+        }
+
+        attachEvents() {
+            setTimeout(() => {
+                this.updateAccountList();
+                const saveBtn = document.getElementById('saveAccountBtn');
+                const clearBtn = document.getElementById('clearTabBtn');
+                const openCleanBtn = document.getElementById('openCleanTabBtn');
+                const openWithAccountBtn = document.getElementById('openTabWithAccountBtn');
+                const clearAllBtn = document.getElementById('clearAllAccountsBtn');
+                if (saveBtn) saveBtn.onclick = () => this.saveCurrentAccount();
+                if (clearBtn) clearBtn.onclick = () => this.clearCurrentTab();
+                if (openCleanBtn) openCleanBtn.onclick = () => this.openNewCleanTab();
+                if (openWithAccountBtn) openWithAccountBtn.onclick = () => this.openNewTabWithAccount();
+                if (clearAllBtn) clearAllBtn.onclick = () => this.clearAllAccounts();
+            }, 100);
+        }
+
+        refreshUI() {
+            this.updateAccountList();
+            this.updateCurrentAccountName();
+        }
+
+        updateCurrentAccountName() {
+            const nameElement = document.getElementById('currentAccountName');
+            if (nameElement) {
+                nameElement.textContent = this.currentAccount ?
+                    (this.accounts[this.currentAccount]?.name || 'Chưa chọn') : 'Chưa chọn';
+            }
+        }
+
+        updateAccountList() {
+            // ...giữ nguyên code...
+            const container = document.getElementById('accountList');
+            if (!container) return;
+            const accountIds = Object.keys(this.accounts);
+            if (accountIds.length === 0) {
+                container.innerHTML = '<div style="text-align: center; opacity: 0.7;">Chưa có tài khoản nào. Hãy lưu tài khoản đầu tiên!</div>';
+                return;
+            }
+            container.innerHTML = accountIds.map(accountId => {
+                const account = this.accounts[accountId];
+                const isActive = this.currentAccount === accountId;
+                return `
+                    <div class="account-item ${isActive ? 'active' : ''}" 
+                         data-account-id="${accountId}">
+                        <div>
+                            <strong>${account.name}</strong>
+                            <div style="font-size: 11px; opacity: 0.8;">
+                                Lưu: ${new Date(account.created).toLocaleString()}
+                            </div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:5px;">
+                            ${isActive ? '<span style="color: #4CAF50; font-size:11px;">Đang dùng</span>' : ''}
+                            <button class="btn btn-danger btn-delete-account" style="padding: 4px 8px; font-size: 10px;" 
+                                    data-account-id="${accountId}">Xóa</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.querySelectorAll('.btn-delete-account').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    const aid = btn.getAttribute('data-account-id');
+                    this.deleteAccount(aid);
+                };
+            });
+
+            container.querySelectorAll('.account-item').forEach(item => {
+                item.onclick = (e) => {
+                    if (e.target.classList.contains('btn-delete-account')) return;
+                    const aid = item.getAttribute('data-account-id');
+                    this.selectAccount(aid);
+                };
+            });
+        }
+
+        // ----------- UPDATE: Lưu và phục hồi full dữ liệu cho VMOS/UGPhone -----------
+
+        saveCurrentAccount() {
+            const accountName = prompt('Nhập tên tài khoản:');
+            if (!accountName || !accountName.trim()) return;
+            const accountId = 'acc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            const accountData = {
+                id: accountId,
+                name: accountName.trim(),
+                cookies: this.getAllCookies(),
+                localStorage: this.getAllLocalStorage(),
+                sessionStorage: this.getAllSessionStorage(),
+                created: Date.now()
+            };
+            this.accounts[accountId] = accountData;
+            GM_setValue('saved_accounts', this.accounts);
+            this.currentAccount = accountId;
+            this.registerTab();
+            alert(`Đã lưu tài khoản "${accountName}" thành công!`);
+            this.refreshUI();
+        }
+
+        selectAccount(accountId) {
+            if (!this.accounts[accountId]) return;
+            const account = this.accounts[accountId];
+            this.clearCurrentData();
+            setTimeout(() => {
+                this.applyAccount(account);
+                this.currentAccount = accountId;
+                sessionStorage.removeItem('isCleanTab');
+                this.registerTab();
+                alert(`Đã chuyển sang tài khoản "${account.name}". Trang sẽ tự tải lại.`);
+                setTimeout(() => location.reload(), 1000);
+            }, 500);
+        }
+
+        applyAccount(account) {
+            this.setAllLocalStorage(account.localStorage || {});
+            this.setAllSessionStorage(account.sessionStorage || {});
+            this.setAllCookies(account.cookies || {});
+        }
+
+        clearCurrentTab() {
+            if (confirm('Bạn có chắc muốn đặt lại tab này không?')) {
+                this.clearCurrentData();
+                this.currentAccount = null;
+                sessionStorage.setItem('isCleanTab', 'true');
+                this.registerTab();
+                alert('Tab đã được đặt lại!');
+                setTimeout(() => location.reload(), 1000);
+            }
+        }
+
+        clearCurrentData() {
+            this.clearAllLocalStorage();
+            this.clearAllCookies();
+            this.clearAllSessionStorage();
+        }
+
+        deleteAccount(accountId) {
+            const account = this.accounts[accountId];
+            if (confirm(`Xóa tài khoản "${account.name}"?`)) {
+                delete this.accounts[accountId];
+                GM_setValue('saved_accounts', this.accounts);
+                if (this.currentAccount === accountId) {
+                    this.currentAccount = null;
+                    this.registerTab();
+                }
+                this.refreshUI();
+                alert(`Đã xóa tài khoản "${account.name}".`);
+            }
+        }
+
+        clearAllAccounts() {
+            if (confirm('Bạn có chắc muốn xóa tất cả tài khoản đã lưu?')) {
+                this.accounts = {};
+                GM_setValue('saved_accounts', {});
+                this.currentAccount = null;
+                this.registerTab();
+                this.refreshUI();
+                alert('Đã xóa tất cả tài khoản!');
+            }
+        }
+
+        openNewCleanTab() {
+            GM_setValue('clean_next_tab', true);
+            if (typeof GM_openInTab === "function") {
+                GM_openInTab(window.location.origin + '/', {
+                    active: true,
+                    insert: true,
+                    setParent: false
+                });
+            } else {
+                window.open(window.location.origin + '/', '_blank');
+            }
+            setTimeout(() => {
+                alert('Đã mở tab mới!');
+            }, 100);
+        }
+
+        openNewTabWithAccount() {
+            const accountIds = Object.keys(this.accounts);
+            if (accountIds.length === 0) {
+                alert('Chưa có tài khoản nào! Hãy lưu trước.');
+                return;
+            }
+            const accountId = prompt(
+                `Chọn tài khoản (nhập số 1-${accountIds.length}):\n` +
+                accountIds.map((id, index) => `${index + 1}. ${this.accounts[id].name}`).join('\n')
+            );
+            const index = parseInt(accountId) - 1;
+            if (index >= 0 && index < accountIds.length) {
+                GM_setValue('next_tab_account', accountIds[index]);
+                if (typeof GM_openInTab === "function") {
+                    GM_openInTab(window.location.origin + '/', {
+                        active: true,
+                        insert: true,
+                        setParent: false
+                    });
+                } else {
+                    window.open(window.location.origin + '/', '_blank');
+                }
+                setTimeout(() => {
+                    alert('Đã mở tab mới với tài khoản đã chọn!');
+                }, 100);
+            }
+        }
+
+        checkNewTabAccount() {
+            const nextAccount = GM_getValue('next_tab_account', null);
+            if (nextAccount && this.accounts[nextAccount]) {
+                GM_deleteValue('next_tab_account');
+                setTimeout(() => {
+                    this.selectAccount(nextAccount);
+                }, 2000);
+            }
+        }
+    }
+
+    function init() {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
+                    window.tabManager = new MultiTabAccountManager();
+                    window.tabManager.checkNewTabAccount();
+                }, 1000);
+            });
+        } else {
+            setTimeout(() => {
+                window.tabManager = new MultiTabAccountManager();
+                window.tabManager.checkNewTabAccount();
+            }, 1000);
+        }
+    }
+
+    init();
+})();
