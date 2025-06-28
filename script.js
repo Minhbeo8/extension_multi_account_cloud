@@ -25,7 +25,7 @@
     'use strict';
     
     
-    const encodedUrl = "https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/refs/heads/main/script.js";
+    const encodedUrl = "https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/refs/heads/main/demo";
     
   
     const sourceUrl = atob(encodedUrl);
