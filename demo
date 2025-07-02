@@ -38,9 +38,7 @@
             max-width: 98vw;
             max-height: 80vh;
             overflow-y: auto;
-        }
-        /* ...CSS giữ nguyên như cũ... */
-    `);
+    );
 
     class MultiTabAccountManager {
         constructor() {
@@ -75,8 +73,6 @@
             setInterval(() => { this.updateTabActivity(); }, 5000);
         }
 
-        // ------- Thêm các hàm mới cho VMOS Cloud ---------
-
         getAllCookies() {
             const cookies = {};
             document.cookie.split(';').forEach(cookie => {
@@ -86,7 +82,7 @@
             return cookies;
         }
         setAllCookies(cookieObj) {
-            // Auto detect domain
+            
             const host = window.location.hostname;
             let domain = '';
             if (host.endsWith('cloud.vmos.com')) {
@@ -167,7 +163,7 @@
             keysToRemove.forEach(key => sessionStorage.removeItem(key));
         }
 
-        // ----------- Các hàm cũ vẫn giữ lại ----------
+      
 
         checkAndSetupCleanTab() {
             const shouldClean = GM_getValue('clean_next_tab', false);
@@ -226,7 +222,7 @@
         }
 
         createUI() {
-            // Giữ nguyên UI như cũ
+            
             const savedPos = GM_getValue('toggle_button_position', { top: 20, left: window.innerWidth - 180 });
             const toggleBtn = document.createElement('button');
             toggleBtn.id = 'toggleBtn';
@@ -258,7 +254,7 @@
         }
 
         getUIHTML() {
-            // ...giữ nguyên code...
+         
             return `
                 <h2>🗂️ Quản lý tài khoản</h2>
                 <div style="font-size:11px;text-align:right;opacity:0.7;">Kéo icon để đổi vị trí, click để mở menu.</div>
