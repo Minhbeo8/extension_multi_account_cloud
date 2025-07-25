@@ -1,7 +1,7 @@
 # Multi-Tab Account Manager
 
 <p align="center">
-  <img src="https://i.postimg.cc/Jhcr8R5L/hominz-png-4.png" alt="script icon" width="128">
+  <img src="[https://i.postimg.cc/Jhcr8R5L/hominz-png-4.png](https://i.postimg.cc/SRSDLKcn/eddf18a0812c3cd1b5e92cf80158cc86-edit-525557047898993.png)" alt="script icon" width="128">
 </p>
 
 <p align="center">
@@ -102,7 +102,7 @@ Bạn cần một trình quản lý userscript để sử dụng script này. **
 *   [Cài cho Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 *   [Cài cho Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
 *   [Cài cho Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
-
+* các trình duyệt khác như lemur,kiwi,quetta,via browser,.... 
 **Bước 2: Cài Đặt Script**
 
 Nhấp vào liên kết bên dưới để cài đặt script loader. Tampermonkey sẽ tự động mở ra một trang cài đặt.
@@ -116,14 +116,21 @@ Nhấp vào liên kết bên dưới để cài đặt script loader. Tampermonk
 **Bước 3: Hoàn Tất!**
 
 Script đã được cài đặt! Bạn chỉ cần truy cập một trong những trang web được hỗ trợ và bạn sẽ thấy icon nổi 🗂️ xuất hiện.
-
+‼️ Lưu Ý Quan Trọng & Gỡ Rối
+Vấn đề: Script không chạy hoặc không thấy icon trên trình duyệt di động (Kiwi, Lemur,...)?
+Trên một số trình duyệt di động, sau khi cài đặt Tampermonkey, bạn có thể cần phải bật Chế độ nhà phát triển (Developer Mode) để tiện ích có thể hoạt động đầy đủ.
+Mở trình duyệt và truy cập vào địa chỉ: chrome://extensions
+Ở góc trên bên phải, tìm và bật công tắc "Developer Mode" / "Chế độ nhà phát triển".
+Tải lại trang web bạn muốn dùng script.
+Vấn đề: Vẫn không thấy icon sau khi làm các bước trên?
+Đôi khi Tampermonkey cần được khởi động lại. Tại trang chrome://extensions, hãy tìm Tampermonkey, tắt công tắc của nó rồi bật lại. Sau đó tải lại trang web.
 ---
 
 ### Tác Giả
 
 Được làm với ❤️ bởi **Minhbeo8 (hominz)**.
 
-[Ghé thăm GitHub của tôi](https://github.com/Minhnobeo)
+[Ghé thăm GitHub của tôi](https://github.com/Minhbeo8)
 
 ### Giấy Phép
 
