@@ -1,7 +1,7 @@
 # Multi-Tab Account Manager
 
 <p align="center">
-  <img src="[https://i.postimg.cc/vZVLVnCP/eddf18a0812c3cd1b5e92cf80158cc86-edit-525557047898993.png]" alt="script icon" width="128">
+  <img src="https://i.postimg.cc/vZVLVnCP/eddf18a0812c3cd1b5e92cf80158cc86-edit-525557047898993.png" alt="script icon" width="128">
 </p>
 
 <p align="center">
@@ -44,13 +44,20 @@ This script is designed to work on the following cloud phone platforms:
 
 ### 🔧 Installation
 
-**Step 1: Install a Userscript Manager**
+**Step 1: Install a Browser and Userscript Manager**
 
-You need a userscript manager to use this script. **Tampermonkey** is highly recommended.
+You need a compatible browser and a userscript manager to use this script. **Tampermonkey** is highly recommended.
 
-*   [Install for Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
-*   [Install for Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
-*   [Install for Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
+**For Desktop Users:**
+*   **Chrome**: [Install Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+*   **Firefox**: [Install Tampermonkey](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
+*   **Edge**: [Install Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
+
+**For Android Users:**
+You need a browser that supports Chrome extensions.
+*   **Kiwi Browser**: [Install from Play Store](https://play.google.com/store/apps/details?id=com.kiwibrowser.browser)
+*   **Lemur Browser**: [Install from Play Store](https://play.google.com/store/apps/details?id=com.lemurbrowser.exts)
+*   After installing one of these browsers, open it and install Tampermonkey from the Chrome Web Store.
 
 **Step 2: Install the Script**
 
@@ -64,7 +71,22 @@ Click the link below to install the script loader. Tampermonkey will automatical
 
 **Step 3: All Done!**
 
-The script is now installed! Just navigate to one of the supported websites, and you will see the floating icon 🗂️.
+The script is now installed! Just navigate to one of the supported websites, and you will see the floating icon.
+
+---
+
+### ‼️ Important Notes & Troubleshooting
+
+**Problem: The script doesn't run or the icon doesn't appear on mobile browsers (Kiwi, Lemur, etc.)?**
+
+*   **Solution:** On some mobile browsers, after installing Tampermonkey, you might need to enable **Developer Mode** for the extension to function correctly.
+    1.  Open your browser and go to `chrome://extensions`.
+    2.  In the top-right corner, find and turn on the **"Developer Mode"** switch.
+    3.  Reload the website where you want to use the script.
+
+**Problem: Still no icon after trying the above?**
+
+*   **Solution:** Sometimes Tampermonkey just needs a restart. On the `chrome://extensions` page, find Tampermonkey, turn its switch **off**, and then immediately turn it **on** again. Reload your webpage.
 
 ---
 
@@ -95,42 +117,57 @@ Script này được thiết kế để hoạt động trên các nền tảng c
 
 ### 🔧 Hướng Dẫn Cài Đặt
 
-**Bước 1: Cài Trình Quản Lý Userscript**
+**Bước 1: Cài Trình Duyệt và Trình Quản Lý Userscript**
 
-Bạn cần một trình quản lý userscript để sử dụng script này. **Tampermonkey** là lựa chọn được khuyến khích nhất.
+Bạn cần một trình duyệt tương thích và một trình quản lý userscript để sử dụng script này. **Tampermonkey** là lựa chọn được khuyến khích nhất.
 
-*   [Cài cho Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
-*   [Cài cho Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
-*   [Cài cho Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
-*   [các trình duyệt khác như lemur,kiwi,quetta,via browser,....] 
+**Đối với người dùng Máy tính:**
+*   **Chrome**: [Cài Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+*   **Firefox**: [Cài Tampermonkey](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
+*   **Edge**: [Cài Tampermonkey](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
+
+**Đối với người dùng Android:**
+Bạn cần một trình duyệt hỗ trợ tiện ích mở rộng của Chrome.
+*   **Kiwi Browser**: [Cài từ Play Store](https://play.google.com/store/apps/details?id=com.kiwibrowser.browser)
+*   **Lemur Browser**: [Cài từ Play Store](https://play.google.com/store/apps/details?id=com.lemurbrowser.exts)
+*   Sau khi cài một trong các trình duyệt trên, hãy mở nó lên và cài đặt Tampermonkey từ Cửa hàng Chrome trực tuyến.
+
 **Bước 2: Cài Đặt Script**
 
 Nhấp vào liên kết bên dưới để cài đặt script loader. Tampermonkey sẽ tự động mở ra một trang cài đặt.
 
 <p align="center">
-  <a href="https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/refs/heads/main/multi-tab-account-manager.user.js" style="text-decoration: none;">
+  <a href="https://raw.githubusercontent.com/Minhnobeo/mutil_browser_cloud/main/loader.user.js" style="text-decoration: none;">
     <img src="https://img.shields.io/badge/Cài%20Đặt%20Script-Nhấp%20Vào%20Đây-blue?style=for-the-badge&logo=tampermonkey" alt="Cài Đặt Script">
   </a>
 </p>
 
 **Bước 3: Hoàn Tất!**
 
-Script đã được cài đặt! Bạn chỉ cần truy cập một trong những trang web được hỗ trợ và bạn sẽ thấy icon nổi 🗂️ xuất hiện.
-‼️ Lưu Ý Quan Trọng & Gỡ Rối
-Vấn đề: Script không chạy hoặc không thấy icon trên trình duyệt di động (Kiwi, Lemur,...)?
-Trên một số trình duyệt di động, sau khi cài đặt Tampermonkey, bạn có thể cần phải bật Chế độ nhà phát triển (Developer Mode) để tiện ích có thể hoạt động đầy đủ.
-Mở trình duyệt và truy cập vào địa chỉ: chrome://extensions
-Ở góc trên bên phải, tìm và bật công tắc "Developer Mode" / "Chế độ nhà phát triển".
-Tải lại trang web bạn muốn dùng script.
-Vấn đề: Vẫn không thấy icon sau khi làm các bước trên?
-Đôi khi Tampermonkey cần được khởi động lại. Tại trang chrome://extensions, hãy tìm Tampermonkey, tắt công tắc của nó rồi bật lại. Sau đó tải lại trang web.
+Script đã được cài đặt! Bạn chỉ cần truy cập một trong những trang web được hỗ trợ và bạn sẽ thấy icon nổi xuất hiện.
+
+---
+
+### ‼️ Lưu Ý Quan Trọng & Gỡ Rối
+
+**Vấn đề: Script không chạy hoặc không thấy icon trên trình duyệt di động (Kiwi, Lemur,...)?**
+
+*   **Giải pháp:** Trên một số trình duyệt di động, sau khi cài đặt Tampermonkey, bạn có thể cần phải bật **Chế độ nhà phát triển (Developer Mode)** để tiện ích có thể hoạt động đầy đủ.
+    1.  Mở trình duyệt và truy cập vào địa chỉ: `chrome://extensions`
+    2.  Ở góc trên bên phải, tìm và **bật công tắc "Developer Mode" / "Chế độ nhà phát triển"**.
+    3.  Tải lại trang web bạn muốn dùng script.
+
+**Vấn đề: Vẫn không thấy icon sau khi làm các bước trên?**
+
+*   **Giải pháp:** Đôi khi Tampermonkey cần được khởi động lại. Tại trang `chrome://extensions`, hãy tìm Tampermonkey, tắt công tắc của nó rồi bật lại ngay lập tức. Sau đó tải lại trang web.
+
 ---
 
 ### Tác Giả
 
 Được làm với ❤️ bởi **Minhbeo8 (hominz)**.
 
-[Ghé thăm GitHub của tôi](https://github.com/Minhbeo8)
+[Ghé thăm GitHub của tôi](https://github.com/Minhnobeo)
 
 ### Giấy Phép
 
