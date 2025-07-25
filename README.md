@@ -63,13 +63,8 @@ You need a browser that supports Chrome extensions.
 
 **Step 2: Install the Script**
 
-Click the link below to install the script loader. Tampermonkey will automatically open an installation page.
+Paste the link below into the search bar. Tampermonkey will automatically open an installation page.
 
-<p align="center">
-  <a href="https://raw.githubusercontent.com/Minhnobeo/mutil_browser_cloud/main/loader.user.js" style="text-decoration: none;">
-    <img src="https://img.shields.io/badge/Install%20Script-Click%20Here-blue?style=for-the-badge&logo=tampermonkey" alt="Install Script">
-  </a>
-</p>
 
 **Step 3: All Done!**
 
@@ -138,13 +133,9 @@ Bạn cần một trình duyệt hỗ trợ tiện ích mở rộng của Chrome
 
 **Bước 2: Cài Đặt Script**
 
-Nhấp vào liên kết bên dưới để cài đặt script loader. Tampermonkey sẽ tự động mở ra một trang cài đặt.
+Hãy dán liên kết bên dưới vào thanh tìm kiếm . Tampermonkey sẽ tự động mở ra một trang cài đặt.
 
-<p align="center">
-  <a href="https://raw.githubusercontent.com/Minhnobeo/mutil_browser_cloud/main/loader.user.js" style="text-decoration: none;">
-    <img src="https://img.shields.io/badge/Cài%20Đặt%20Script-Nhấp%20Vào%20Đây-blue?style=for-the-badge&logo=tampermonkey" alt="Cài Đặt Script">
-  </a>
-</p>
+
 
 **Bước 3: Hoàn Tất!**
 
