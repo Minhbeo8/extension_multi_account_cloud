@@ -1,59 +1,130 @@
-# Multi-Tab Account Manager for UGPhone
+# Multi-Tab Account Manager
 
-## Giới thiệu
+<p align="center">
+  <img src="https://i.postimg.cc/Jhcr8R5L/hominz-png-4.png" alt="script icon" width="128">
+</p>
 
-**Multi-Tab Account Manager for UGPhone** là tiện ích userscript dành cho trình duyệt (Tampermonkey), giúp bạn quản lý, chuyển đổi, lưu nhiều tài khoản trên [ugphone.com](https://ugphone.com) cực kỳ nhanh chóng.  
-Chức năng nổi bật:  
-- Lưu và đặt tên nhiều tài khoản.
-- Chuyển đổi tài khoản chỉ với 1 click, không cần đăng nhập lại.
+<p align="center">
+  <em>Quản lý nhiều tài khoản trên các trang cloud phone một cách dễ dàng và hiệu quả.</em>
+</p>
 
-
----
-
-## Hướng dẫn cài đặt
-
-1. **Cài đặt [Tampermonkey](https://tampermonkey.net/) cho trình duyệt của bạn.**
-2. **Cài đặt script qua link sau:**  
-   👉 [BẤM ĐỂ CÀI ĐẶT NGAY](https://cdn.jsdelivr.net/gh/Minhbeo8/extension_multi_Browser@v1.0.1/multi-tab-account-manager.user.js)
-3. Vào trang [https://ugphone.com](https://ugphone.com) hoặc [https://www.ugphone.com](https://www.ugphone.com).
-4. Bạn sẽ thấy nút 🗂️ ở góc phải trên. Click vào để mở menu quản lý tài khoản.
+<p align="center">
+  <img src="https://img.shields.io/badge/version-7.1.0-blue" alt="version">
+  <img src="https://img.shields.io/badge/author-Minhbeo8%20(hominz)-brightgreen" alt="author">
+  <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="license">
+  <img src="https://img.shields.io/badge/platform-Tampermonkey-orange" alt="platform">
+</p>
 
 ---
 
-## Hướng dẫn sử dụng
+## 🇺🇸 English
 
-- **Lưu tài khoản:**  
-  Đăng nhập một tài khoản, nhấn nút "Lưu tài khoản", nhập tên, lưu lại.
-- **Chuyển tài khoản:**  
-  Click vào tài khoản trong danh sách, xác nhận, trang sẽ tự load lại với tài khoản đã chọn.
-- **Mở tab mới sạch:**  
-  Nhấn "Mở tab mới" để mở 1 tab hoàn toàn sạch (logout tất cả, không dính tài khoản cũ).
-- **Mở tab với tài khoản:**  
-  Nhấn "Mở tab với tài khoản", chọn tài khoản, tab mới sẽ tự load với tài khoản đã chọn.
-- **Xóa tài khoản:**  
-  Nhấn nút "Xóa" cạnh tên tài khoản.
-- **Di chuyển nút:**  
-  Giữ & kéo nút 🗂️ để di chuyển đến vị trí bạn thích.
+### About The Project
+
+Are you tired of constantly logging out and logging back in to manage multiple accounts on cloud phone services? **Multi-Tab Account Manager** is a powerful Userscript designed to solve this exact problem. It allows you to save login sessions (including cookies and local storage) for different accounts and switch between them with a single click, all without leaving your browser tab.
+
+### 🚀 Key Features
+
+*   **Save & Restore Accounts**: Save the login session of your current account with a custom name.
+*   **One-Click Switching**: Easily switch between saved accounts. The page will automatically reload with the new account's session.
+*   **Clean Session**: Open a new, completely clean tab without any saved login data, perfect for logging into a new account.
+*   **Intuitive UI**: A draggable floating icon provides easy access to the control panel. The interface is optimized for both desktop and mobile.
+*   **Auto-Update**: The script uses a loader to automatically fetch and run the latest version, so you always have the newest features and bug fixes.
+
+### 🌐 Supported Websites
+
+This script is designed to work on the following cloud phone platforms:
+
+*   `https://www.ugphone.com/*`
+*   `https://ugphone.com/*`
+*   `https://cloud.vsphone.com/*`
+*   `https://cloud.vmoscloud.com/*`
+*   `https://h5.cccloudphone.com/*`
+*   `https://nexus.cccloudphone.com/*`
+
+### 🔧 Installation
+
+**Step 1: Install a Userscript Manager**
+
+You need a userscript manager to use this script. **Tampermonkey** is highly recommended.
+
+*   [Install for Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+*   [Install for Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
+*   [Install for Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
+
+**Step 2: Install the Script**
+
+Click the link below to install the script loader. Tampermonkey will automatically open an installation page.
+
+<p align="center">
+  <a href="https://raw.githubusercontent.com/Minhnobeo/mutil_browser_cloud/main/loader.user.js" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Install%20Script-Click%20Here-blue?style=for-the-badge&logo=tampermonkey" alt="Install Script">
+  </a>
+</p>
+
+**Step 3: All Done!**
+
+The script is now installed! Just navigate to one of the supported websites, and you will see the floating icon 🗂️.
 
 ---
 
-## Lưu ý
+## 🇻🇳 Tiếng Việt
 
-- **Hãy luôn lưu lại tài khoản hiện tại trước khi chuyển tab hoặc đăng nhập tài khoản mới để tránh mất dữ liệu.**
-- Nếu sử dụng hoặc reup lại script này, vui lòng ghi rõ nguồn:
-  - Tác giả: [Minhbeo8](https://github.com/Minhbeo8)
-  - Repo: https://github.com/Minhbeo8/extension_multi_Browser
+### Về Dự Án
+
+Bạn có mệt mỏi với việc phải đăng xuất rồi đăng nhập lại liên tục để quản lý nhiều tài khoản trên các dịch vụ cloud phone không? **Multi-Tab Account Manager** là một Userscript mạnh mẽ được thiết kế để giải quyết chính xác vấn đề này. Nó cho phép bạn lưu lại phiên đăng nhập (bao gồm cookies và local storage) cho nhiều tài khoản khác nhau và chuyển đổi giữa chúng chỉ bằng một cú nhấp chuột mà không cần rời khỏi tab trình duyệt.
+
+### 🚀 Tính Năng Nổi Bật
+
+*   **Lưu & Khôi Phục Tài Khoản**: Lưu lại phiên đăng nhập của tài khoản hiện tại với một tên tùy chỉnh.
+*   **Chuyển Đổi Nhanh**: Dễ dàng chuyển đổi giữa các tài khoản đã lưu. Trang sẽ tự động tải lại với phiên đăng nhập của tài khoản mới.
+*   **Tab Sạch**: Mở một tab mới hoàn toàn sạch, không có dữ liệu đăng nhập, lý tưởng để đăng nhập vào một tài khoản mới.
+*   **Giao Diện Trực Quan**: Icon nổi có thể kéo thả giúp truy cập bảng điều khiển dễ dàng. Giao diện được tối ưu cho cả máy tính và điện thoại.
+*   **Tự Động Cập Nhật**: Script sử dụng một loader để tự động tải và chạy phiên bản mới nhất, giúp bạn luôn có được những tính năng và bản vá lỗi mới nhất.
+
+### 🌐 Các Trang Web Được Hỗ Trợ
+
+Script này được thiết kế để hoạt động trên các nền tảng cloud phone sau:
+
+*   `https://www.ugphone.com/*`
+*   `https://ugphone.com/*`
+*   `https://cloud.vsphone.com/*`
+*   `https://cloud.vmoscloud.com/*`
+*   `https://h5.cccloudphone.com/*`
+*   `https://nexus.cccloudphone.com/*`
+
+### 🔧 Hướng Dẫn Cài Đặt
+
+**Bước 1: Cài Trình Quản Lý Userscript**
+
+Bạn cần một trình quản lý userscript để sử dụng script này. **Tampermonkey** là lựa chọn được khuyến khích nhất.
+
+*   [Cài cho Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+*   [Cài cho Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
+*   [Cài cho Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
+
+**Bước 2: Cài Đặt Script**
+
+Nhấp vào liên kết bên dưới để cài đặt script loader. Tampermonkey sẽ tự động mở ra một trang cài đặt.
+
+<p align="center">
+  <a href="https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/refs/heads/main/multi-tab-account-manager.user.js" style="text-decoration: none;">
+    <img src="https://img.shields.io/badge/Cài%20Đặt%20Script-Nhấp%20Vào%20Đây-blue?style=for-the-badge&logo=tampermonkey" alt="Cài Đặt Script">
+  </a>
+</p>
+
+**Bước 3: Hoàn Tất!**
+
+Script đã được cài đặt! Bạn chỉ cần truy cập một trong những trang web được hỗ trợ và bạn sẽ thấy icon nổi 🗂️ xuất hiện.
 
 ---
 
-## Liên hệ & Hỗ trợ
+### Tác Giả
 
-- Discord: (https://discord.gg/GJdRjPqH)
+Được làm với ❤️ bởi **Minhbeo8 (hominz)**.
 
----
+[Ghé thăm GitHub của tôi](https://github.com/Minhnobeo)
 
-## License
+### Giấy Phép
 
-MIT License
-
-Nếu reup,vui lòng ghi nguồn Xin cảm ơn!
+Dự án này được cấp phép theo Giấy phép MIT.
