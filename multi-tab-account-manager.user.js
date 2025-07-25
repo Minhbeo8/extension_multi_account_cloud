@@ -1,8 +1,7 @@
 // ==UserScript==
-// @name         Multi-Tab Account Manager (Loader)
+// @name         Multi-Tab Account Manager
 // @namespace    http://tampermonkey.net/
 // @version      3.0.0
-// @description  Loads the latest version of the Account Manager script from GitHub repo.
 // @author       Minhbeo8 (hominz)
 // @icon         https://i.postimg.cc/Jhcr8R5L/hominz-png-4.png
 // @match        https://www.ugphone.com/*
