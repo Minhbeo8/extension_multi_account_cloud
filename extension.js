@@ -2,8 +2,8 @@
 // @name         Multi-Tab Account Manager
 // @namespace    http://tampermonkey.net/
 // @version      5.8.0
-// @description  
-// @author       Minhbeo8
+// @description  update more cloud phone
+// @author       Minhbeo8 (hominz) 
 // @match        https://www.ugphone.com/*
 // @match        https://ugphone.com/*
 // @match        https://cloud.vsphone.com/*
