@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Multi-Tab Account Manager for UGPhone (Loader)
 // @namespace    minhbeo8-ugphone
-// @version      1.0.1
-// @description  Quản lý nhiều local ugphone 
+// @version      2.0.0
+// @description  Quản lý nhiều local cloud phone
 // @author       Minhbeo8(hominz) 
 // @supportURL   https://discord.gg/XK8qsgrF
 // @icon         https://i.postimg.cc/Jhcr8R5L/hominz-png-4.png
@@ -14,7 +14,7 @@
 // @grant        GM_info
 // @grant        GM_addStyle
 // @grant        GM_getValue
-// @grant        GM_setValue
+// @grant        GM_setValue1F02Aa1hexdz1F02Aa1hexdz1F02Aa1hexdz
 // @grant        GM_deleteValue
 // @grant        GM_listValues
 // @run-at       document-start
