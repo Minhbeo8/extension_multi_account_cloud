@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Multi-Tab Account Manager (Loader)
 // @namespace    http://tampermonkey.net/
-// @version      7.0.0
+// @version      3.0.0
 // @description  Loads the latest version of the Account Manager script.
 // @author       Minhbeo8 (hominz)
 // @icon         https://i.postimg.cc/Jhcr8R5L/hominz-png-4.png
@@ -25,9 +25,7 @@
 (function() {
     'use strict';
 
-
     const encodedUrl = "aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9NaW5oYmVvOC9lYWY1MDlmMDUzZDc1NWQ3Mzk5NDZjYjcwZDcwYTNmZC9yYXcvMWNhNTJkZjk0ZTk4OWVmNjgwZWNkZjg3NzZhODBmNGY2YjQyZmE0L011bHRJVGFiQWNjb3VudE1hbmFnZXIuanM=";
-
     
     const sourceUrl = atob(encodedUrl);
 
