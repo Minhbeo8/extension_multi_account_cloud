@@ -1,23 +1,23 @@
 // ==UserScript==
-// @name         Multi-Tab Account Manager for UGPhone (Loader)
-// @namespace    minhbeo8-ugphone
-// @version      2.0.0
-// @description  Quản lý nhiều local cloud phone
-// @author       Minhbeo8(hominz) 
-// @supportURL   https://discord.gg/XK8qsgrF
+// @name         Multi-Tab Account Manager
+// @namespace    http://tampermonkey.net/
+// @version      5.8.0
+// @description  update more cloud phone
+// @author       Minhbeo8 (hominz) 
 // @icon         https://i.postimg.cc/Jhcr8R5L/hominz-png-4.png
 // @match        https://www.ugphone.com/*
 // @match        https://ugphone.com/*
-// @match        https://www.ugphone.com/toc-portal/*
-// @match        https://ugphone.com/toc-portal/*
-// @grant        GM_xmlhttpRequest
-// @grant        GM_info
-// @grant        GM_addStyle
+// @match        https://cloud.vsphone.com/*
+// @match        https://cloud.vmoscloud.com/*
+// @match        https://h5.cccloudphone.com/*
+// @match        https://nexus.cccloudphone.com/*
+// @grant        GM_setValue
 // @grant        GM_getValue
-// @grant        GM_setValue1F02Aa1hexdz1F02Aa1hexdz1F02Aa1hexdz
 // @grant        GM_deleteValue
 // @grant        GM_listValues
-// @run-at       document-start
+// @grant        GM_addStyle
+// @grant        GM_openInTab
+// @run-at       document-idle
 // ==/UserScript==
 
 
