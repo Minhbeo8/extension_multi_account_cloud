@@ -57,6 +57,8 @@ You need a compatible browser and a userscript manager to use this script. **Tam
 You need a browser that supports Chrome extensions.
 *   **Kiwi Browser**: [Install from Play Store](https://play.google.com/store/apps/details?id=com.kiwibrowser.browser)
 *   **Lemur Browser**: [Install from Play Store](https://play.google.com/store/apps/details?id=com.lemurbrowser.exts)
+*   **quetta Browser**:[Install from Play Store](https://play.google.com/store/apps/details?id=net.quetta.browser)
+*   Or any browser that can install Tempermonkey and run userscript.
 *   After installing one of these browsers, open it and install Tampermonkey from the Chrome Web Store.
 
 **Step 2: Install the Script**
@@ -130,6 +132,8 @@ Bạn cần một trình duyệt tương thích và một trình quản lý user
 Bạn cần một trình duyệt hỗ trợ tiện ích mở rộng của Chrome.
 *   **Kiwi Browser**: [Cài từ Play Store](https://play.google.com/store/apps/details?id=com.kiwibrowser.browser)
 *   **Lemur Browser**: [Cài từ Play Store](https://play.google.com/store/apps/details?id=com.lemurbrowser.exts)
+*   **Quetta Browser**: [Cài từ Play Store](https://play.google.com/store/apps/details?id=net.quetta.browser)
+*   Hoặc bất kỳ trình duyệt nào có thể cài đặt Tempermonkey và chạy userscript. 
 *   Sau khi cài một trong các trình duyệt trên, hãy mở nó lên và cài đặt Tampermonkey từ Cửa hàng Chrome trực tuyến.
 
 **Bước 2: Cài Đặt Script**
