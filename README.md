@@ -1,7 +1,7 @@
 # Multi-Tab Account Manager
 
 <p align="center">
-  <img src="[https://i.postimg.cc/Jhcr8R5L/hominz-png-4.png](https://i.postimg.cc/SRSDLKcn/eddf18a0812c3cd1b5e92cf80158cc86-edit-525557047898993.png)" alt="script icon" width="128">
+  <img src="[https://i.postimg.cc/vZVLVnCP/eddf18a0812c3cd1b5e92cf80158cc86-edit-525557047898993.png)" alt="script icon" width="128">
 </p>
 
 <p align="center">
