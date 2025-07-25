@@ -2,8 +2,8 @@
 // @name         Multi-Tab Account Manager
 // @namespace    http://tampermonkey.net/
 // @version      5.8.0
-// @description  Chuyển hướng mở tab mới tới trang đăng nhập, fix GUI cho cccloudphone. / New tabs open to login page, GUI fix for cccloudphone.
-// @author       Minhbeo8 (Đã chỉnh sửa bởi AI)
+// @description  
+// @author       Minhbeo8
 // @match        https://www.ugphone.com/*
 // @match        https://ugphone.com/*
 // @match        https://cloud.vsphone.com/*
@@ -22,7 +22,6 @@
 (function() {
     'use strict';
 
-    // --- MAPPING FOR LOGIN PAGES ---
     const loginPaths = {
         'www.ugphone.com': '/toc-portal/#/login',
         'ugphone.com': '/toc-portal/#/login',
@@ -30,7 +29,6 @@
         'nexus.cccloudphone.com': '/minified:xc',
     };
 
-    // --- I18N (Internationalization) Setup ---
     const translations = {
         en: { managerTitle: "Account Manager", toggleButtonTitle: "Manage Accounts (Drag to move, click to open)", dragHint: "Drag icon to move, click to open menu.", importantNote: "<b>Note:</b> Remember to <u>save the current account</u> before opening or switching to a new tab. Otherwise, all login data might be lost.", currentTabTitle: "Current Tab", tabIdLabel: "ID:", accountLabel: "Account:", notSelected: "Not Selected", tabTypeLabel: "Tab Type:", newTab: "New Tab", regularTab: "Regular Tab", saveAccountBtn: "Save Account", resetTabBtn: "Reset Tab", selectAccountTitle: "Select an account for this site", noAccounts: "No accounts found for this site. Save your first one!", savedAt: "Saved:", inUse: "Active", deleteBtn: "Delete", openCleanTabBtn: "Open New Tab", openWithAccountBtn: "Open Tab with Account", deleteAllBtn: "Delete All", madeBy: "Made by Minhbeo8", promptForAccountName: "Enter account name:", alertAccountSaved: 'Account "%s" saved successfully!', alertAccountSwitched: 'Switched to account "%s". The page will now reload.', confirmResetTab: "Are you sure you want to reset this tab?", alertTabReset: "Tab has been reset!", confirmDeleteAccount: 'Delete account "%s"?', alertAccountDeleted: 'Account "%s" has been deleted.', confirmDeleteAll: "Are you sure you want to delete ALL accounts saved for this site?", alertAllDeleted: "All accounts for this site have been deleted!", alertNewTabOpened: "Opened a new clean tab!", alertNoAccountsToOpen: "No accounts saved for this site yet! Please save one first.", promptSelectAccountForNewTab: "Select an account (enter number 1-%d):\n%s", alertNewTabWithAccountOpened: "Opened a new tab with the selected account!" },
         vi: { managerTitle: "Quản lý tài khoản", toggleButtonTitle: "Quản lý tài khoản (Kéo thả hoặc nhấn vào)", dragHint: "Kéo icon để đổi vị trí, click để mở menu.", importantNote: "<b>Lưu ý:</b> Hãy nhớ <u>lưu tài khoản hiện tại</u> lại trước khi mở hoặc chuyển sang tab mới. Nếu không, mọi dữ liệu đăng nhập sẽ bị mất.", currentTabTitle: "Tab hiện tại", tabIdLabel: "ID:", accountLabel: "Tài khoản:", notSelected: "Chưa chọn", tabTypeLabel: "Loại tab:", newTab: "Tab mới", regularTab: "Tab thường", saveAccountBtn: "Lưu tài khoản", resetTabBtn: "Đặt lại tab", selectAccountTitle: "Chọn tài khoản cho trang này", noAccounts: "Chưa có tài khoản nào cho trang này. Hãy lưu tài khoản đầu tiên!", savedAt: "Lưu:", inUse: "Đang dùng", deleteBtn: "Xóa", openCleanTabBtn: "Mở tab mới", openWithAccountBtn: "Mở tab với tài khoản", deleteAllBtn: "Xóa tất cả", madeBy: "Làm bởi Minhbeo8", promptForAccountName: "Nhập tên tài khoản:", alertAccountSaved: 'Đã lưu tài khoản "%s" thành công!', alertAccountSwitched: 'Đã chuyển sang tài khoản "%s". Trang sẽ tự tải lại.', confirmResetTab: "Bạn có chắc muốn đặt lại tab này không?", alertTabReset: "Tab đã được đặt lại!", confirmDeleteAccount: 'Xóa tài khoản "%s"?', alertAccountDeleted: 'Đã xóa tài khoản "%s".', confirmDeleteAll: "Bạn có chắc muốn xóa tất cả tài khoản đã lưu cho trang này?", alertAllDeleted: "Đã xóa tất cả tài khoản cho trang này!", alertNewTabOpened: "Đã mở tab mới!", alertNoAccountsToOpen: "Chưa có tài khoản nào cho trang này! Hãy lưu trước.", promptSelectAccountForNewTab: "Chọn tài khoản (nhập số 1-%d):\n%s", alertNewTabWithAccountOpened: "Đã mở tab mới với tài khoản đã chọn!" }
@@ -39,21 +37,20 @@
     GM_addStyle(`
         #tabManagerOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2147483646; backdrop-filter: blur(2px); opacity: 0; transition: opacity 0.2s; }
         
-        /* GIAO DIỆN MẶC ĐỊNH (DESKTOP) */
         #tabManager {
             position: fixed; top: 20px; right: 20px;
             background-color: rgba(28, 28, 48, 0.75);
             background-image: radial-gradient(at 2% 4%, hsla(212, 95%, 68%, 0.3) 0px, transparent 50%), radial-gradient(at 98% 94%, hsla(285, 95%, 68%, 0.3) 0px, transparent 50%);
             backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%);
             color: white; padding: 25px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.125); box-shadow: 0 8px 32px rgba(0,0,0,0.37);
-            z-index: 2147483647; /* MAX Z-INDEX */
+            z-index: 2147483647;
             font-family: 'Segoe UI', 'Roboto', sans-serif; font-size: 14px; min-width: 360px; max-width: 95vw; max-height: 85vh; overflow-y: auto;
             transform: scale(0.95); opacity: 0; transition: transform 0.2s ease-out, opacity 0.2s ease-out; visibility: hidden;
         }
         #tabManager.visible { visibility: visible; transform: scale(1); opacity: 1; }
         #toggleBtn {
             position: fixed; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; width: 56px; height: 56px; border-radius: 50%;
-            z-index: 2147483647; /* MAX Z-INDEX */
+            z-index: 2147483647;
             font-size: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 20px rgba(138, 43, 226, 0.4);
             user-select: none; transition: box-shadow 0.3s ease, transform 0.3s ease; cursor: grab; touch-action: none;
             display: flex !important; align-items: center; justify-content: center;
@@ -74,11 +71,10 @@
         #toggleBtn:hover { transform: scale(1.1); box-shadow: 0 6px 25px rgba(0,0,0,0.4), 0 0 30px rgba(138, 43, 226, 0.6); }
         #toggleBtn.dragging { cursor: grabbing; transform: scale(1.1) !important; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
 
-        /* === GIAO DIỆN MOBILE - ÁP DỤNG QUA CLASS 'tm-mobile-view' === */
         .tm-mobile-view #tabManager {
             top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95);
             width: 90vw;
-            max-width: 320px; /* Hẹp như mẫu */
+            max-width: 320px;
             font-size: 13px;
             max-height: 90vh;
             padding: 15px;
@@ -136,14 +132,12 @@
             this.isToggling = false;
             this.setupLanguage();
             this.storageKey = 'saved_accounts_' + window.location.hostname;
-            // THAY ĐỔI: Nhận diện mobile một cách chủ động hơn
             this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
             this.tabId = this.getTabId();
             this.accounts = GM_getValue(this.storageKey, {});
             this.tabSessions = GM_getValue('tab_sessions', {});
             this.currentAccount = null;
             
-            // THAY ĐỔI: Thêm class vào body nếu là mobile
             if (this.isMobile) {
                 document.body.classList.add('tm-mobile-view');
             }
@@ -186,7 +180,6 @@
         }
 
         optimizeForCCCloudPhone() {
-            // Mở rộng chức năng này cho mọi trang nếu là mobile
             if (this.isMobile) {
                 const viewport = document.querySelector('meta[name="viewport"]');
                 if (viewport) {
@@ -200,7 +193,6 @@
             }
         }
 
-        // --- CÁC PHƯƠNG THỨC KHÁC GIỮ NGUYÊN ---
         getLoginUrl() { const hostname = window.location.hostname; const path = loginPaths[hostname] || '/'; return window.location.origin + path; }
         openNewCleanTab() { GM_setValue("clean_next_tab", true); const openUrl = this.getLoginUrl(); if (typeof GM_openInTab === "function") { GM_openInTab(openUrl, { active: true, insert: true, setParent: false }); } else { window.open(openUrl, "_blank"); } setTimeout(() => { alert(this.getText("alertNewTabOpened")); }, 100); }
         openNewTabWithAccount() { const accountIds = Object.keys(this.accounts); if (accountIds.length === 0) { alert(this.getText("alertNoAccountsToOpen")); return; } const promptText = this.getText("promptSelectAccountForNewTab").replace("%d", accountIds.length).replace("%s", accountIds.map((id, index) => `${index + 1}. ${this.accounts[id].name}`).join("\n")); const selectedIndex = prompt(promptText); const index = parseInt(selectedIndex) - 1; if (index >= 0 && index < accountIds.length) { const nextTabData = { accountId: accountIds[index], hostname: window.location.hostname }; GM_setValue("next_tab_account_data", nextTabData); const openUrl = this.getLoginUrl(); if (typeof GM_openInTab === "function") { GM_openInTab(openUrl, { active: true, insert: true, setParent: false }); } else { window.open(openUrl, "_blank"); } setTimeout(() => { alert(this.getText("alertNewTabWithAccountOpened")); }, 100); } }
@@ -235,11 +227,9 @@
     }
 
     function init() {
-        // Chỉ cần gọi class constructor là đủ vì logic đã chuyển vào đó
         new MultiTabAccountManager();
     }
     
-    // Giữ nguyên cách khởi tạo an toàn
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
         init();
     } else {
