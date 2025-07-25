@@ -48,7 +48,7 @@
             }
         },
         onerror: function(err) {
-            console.error("Account Manager Loader: Failed to load script from GitHub.", err);
+            console.error("ko load được cứu bé! >_<.", err);
         }
     });
 })();
