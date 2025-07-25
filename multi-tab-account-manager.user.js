@@ -25,15 +25,15 @@
 (function() {
     'use strict';
 
-    // Chuỗi Base64 chứa URL của Gist
+
     const encodedUrl = "aHR0cHM6Ly9naXN0LmdpdGh1YnVzZXJjb250ZW50LmNvbS9NaW5oYmVvOC9lYWY1MDlmMDUzZDc1NWQ3Mzk5NDZjYjcwZDcwYTNmZC9yYXcvMWNhNTJkZjk0ZTk4OWVmNjgwZWNkZjg3NzZhODBmNGY2YjQyZmE0L011bHRJVGFiQWNjb3VudE1hbmFnZXIuanM=";
 
-    // Giải mã URL tại thời điểm chạy
+    
     const sourceUrl = atob(encodedUrl);
 
     GM_xmlhttpRequest({
         method: "GET",
-        url: `${sourceUrl}?t=${Date.now()}`, // Thêm timestamp để đảm bảo luôn tải bản mới
+        url: `${sourceUrl}?t=${Date.now()}`,
         onload: function(response) {
             if (response.status === 200 && response.responseText) {
                 
