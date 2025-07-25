@@ -1,0 +1,238 @@
+// ==UserScript==
+// @name         Multi-Tab Account Manager
+// @namespace    http://tampermonkey.net/
+// @version      3.0.0
+// @description  update more cloud phone
+// @author       Minhbeo8 (hominz) 
+// @match        https://www.ugphone.com/*
+// @match        https://ugphone.com/*
+// @match        https://cloud.vsphone.com/*
+// @match        https://cloud.vmoscloud.com/*
+// @match        https://h5.cccloudphone.com/*
+// @match        https://nexus.cccloudphone.com/*
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_deleteValue
+// @grant        GM_listValues
+// @grant        GM_addStyle
+// @grant        GM_openInTab
+// @run-at       document-idle
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    const loginPaths = {
+        'www.ugphone.com': '/toc-portal/#/login',
+        'ugphone.com': '/toc-portal/#/login',
+        'h5.cccloudphone.com': '/minified:xc',
+        'nexus.cccloudphone.com': '/minified:xc',
+    };
+
+    const translations = {
+        en: { managerTitle: "Account Manager", toggleButtonTitle: "Manage Accounts (Drag to move, click to open)", dragHint: "Drag icon to move, click to open menu.", importantNote: "<b>Note:</b> Remember to <u>save the current account</u> before opening or switching to a new tab. Otherwise, all login data might be lost.", currentTabTitle: "Current Tab", tabIdLabel: "ID:", accountLabel: "Account:", notSelected: "Not Selected", tabTypeLabel: "Tab Type:", newTab: "New Tab", regularTab: "Regular Tab", saveAccountBtn: "Save Account", resetTabBtn: "Reset Tab", selectAccountTitle: "Select an account for this site", noAccounts: "No accounts found for this site. Save your first one!", savedAt: "Saved:", inUse: "Active", deleteBtn: "Delete", openCleanTabBtn: "Open New Tab", openWithAccountBtn: "Open Tab with Account", deleteAllBtn: "Delete All", madeBy: "Made by Minhbeo8", promptForAccountName: "Enter account name:", alertAccountSaved: 'Account "%s" saved successfully!', alertAccountSwitched: 'Switched to account "%s". The page will now reload.', confirmResetTab: "Are you sure you want to reset this tab?", alertTabReset: "Tab has been reset!", confirmDeleteAccount: 'Delete account "%s"?', alertAccountDeleted: 'Account "%s" has been deleted.', confirmDeleteAll: "Are you sure you want to delete ALL accounts saved for this site?", alertAllDeleted: "All accounts for this site have been deleted!", alertNewTabOpened: "Opened a new clean tab!", alertNoAccountsToOpen: "No accounts saved for this site yet! Please save one first.", promptSelectAccountForNewTab: "Select an account (enter number 1-%d):\n%s", alertNewTabWithAccountOpened: "Opened a new tab with the selected account!" },
+        vi: { managerTitle: "Quản lý tài khoản", toggleButtonTitle: "Quản lý tài khoản (Kéo thả hoặc nhấn vào)", dragHint: "Kéo icon để đổi vị trí, click để mở menu.", importantNote: "<b>Lưu ý:</b> Hãy nhớ <u>lưu tài khoản hiện tại</u> lại trước khi mở hoặc chuyển sang tab mới. Nếu không, mọi dữ liệu đăng nhập sẽ bị mất.", currentTabTitle: "Tab hiện tại", tabIdLabel: "ID:", accountLabel: "Tài khoản:", notSelected: "Chưa chọn", tabTypeLabel: "Loại tab:", newTab: "Tab mới", regularTab: "Tab thường", saveAccountBtn: "Lưu tài khoản", resetTabBtn: "Đặt lại tab", selectAccountTitle: "Chọn tài khoản cho trang này", noAccounts: "Chưa có tài khoản nào cho trang này. Hãy lưu tài khoản đầu tiên!", savedAt: "Lưu:", inUse: "Đang dùng", deleteBtn: "Xóa", openCleanTabBtn: "Mở tab mới", openWithAccountBtn: "Mở tab với tài khoản", deleteAllBtn: "Xóa tất cả", madeBy: "Làm bởi Minhbeo8", promptForAccountName: "Nhập tên tài khoản:", alertAccountSaved: 'Đã lưu tài khoản "%s" thành công!', alertAccountSwitched: 'Đã chuyển sang tài khoản "%s". Trang sẽ tự tải lại.', confirmResetTab: "Bạn có chắc muốn đặt lại tab này không?", alertTabReset: "Tab đã được đặt lại!", confirmDeleteAccount: 'Xóa tài khoản "%s"?', alertAccountDeleted: 'Đã xóa tài khoản "%s".', confirmDeleteAll: "Bạn có chắc muốn xóa tất cả tài khoản đã lưu cho trang này?", alertAllDeleted: "Đã xóa tất cả tài khoản cho trang này!", alertNewTabOpened: "Đã mở tab mới!", alertNoAccountsToOpen: "Chưa có tài khoản nào cho trang này! Hãy lưu trước.", promptSelectAccountForNewTab: "Chọn tài khoản (nhập số 1-%d):\n%s", alertNewTabWithAccountOpened: "Đã mở tab mới với tài khoản đã chọn!" }
+    };
+
+    GM_addStyle(`
+        #tabManagerOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2147483646; backdrop-filter: blur(2px); opacity: 0; transition: opacity 0.2s; }
+        
+        #tabManager {
+            position: fixed; top: 20px; right: 20px;
+            background-color: rgba(28, 28, 48, 0.75);
+            background-image: radial-gradient(at 2% 4%, hsla(212, 95%, 68%, 0.3) 0px, transparent 50%), radial-gradient(at 98% 94%, hsla(285, 95%, 68%, 0.3) 0px, transparent 50%);
+            backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%);
+            color: white; padding: 25px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.125); box-shadow: 0 8px 32px rgba(0,0,0,0.37);
+            z-index: 2147483647;
+            font-family: 'Segoe UI', 'Roboto', sans-serif; font-size: 14px; min-width: 360px; max-width: 95vw; max-height: 85vh; overflow-y: auto;
+            transform: scale(0.95); opacity: 0; transition: transform 0.2s ease-out, opacity 0.2s ease-out; visibility: hidden;
+        }
+        #tabManager.visible { visibility: visible; transform: scale(1); opacity: 1; }
+        #toggleBtn {
+            position: fixed; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; width: 56px; height: 56px; border-radius: 50%;
+            z-index: 2147483647;
+            font-size: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 20px rgba(138, 43, 226, 0.4);
+            user-select: none; transition: box-shadow 0.3s ease, transform 0.3s ease; cursor: grab; touch-action: none;
+            display: flex !important; align-items: center; justify-content: center;
+        }
+        .close-btn { position: absolute; top: 8px; right: 12px; font-size: 28px; font-weight: 300; color: rgba(255,255,255,0.7); background: none; border: none; cursor: pointer; padding: 5px; line-height: 1; transition: color 0.2s, transform 0.2s; }
+        .close-btn:hover { color: white; transform: scale(1.1); }
+        .tab-info, .account-selector { background: rgba(0,0,0,0.15); border-radius: 12px; padding: 18px; margin-bottom: 18px; border: 1px solid rgba(255, 255, 255, 0.08); }
+        .current-tab { border: 2px solid rgba(76, 175, 80, 0.5); background: rgba(76, 175, 80, 0.1); }
+        .account-item { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 12px 15px; margin: 8px 0; cursor: pointer; transition: all .25s ease; border: 1px solid rgba(255,255,255,0.1); display:flex; justify-content:space-between; align-items:center; }
+        .account-item:hover { background: rgba(255,255,255,0.15); transform: translateX(5px); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .account-item.active { background: rgba(76, 175, 80, 0.25) !important; border: 2px solid #4CAF50; box-shadow: 0 0 15px rgba(76, 175, 80, 0.4); }
+        .btn { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 10px 18px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all .25s ease; }
+        .btn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .btn:active { transform: translateY(0); }
+        .flex-row { display: flex; justify-content: center; gap: 15px; }
+        .btn-primary { background: #4CAF50; border-color: #4CAF50; } .btn-primary:hover { background: #5cb85c; border-color: #5cb85c; }
+        .btn-danger { background: #f44336; border-color: #f44336; } .btn-danger:hover { background: #e55348; border-color: #e55348; }
+        #toggleBtn:hover { transform: scale(1.1); box-shadow: 0 6px 25px rgba(0,0,0,0.4), 0 0 30px rgba(138, 43, 226, 0.6); }
+        #toggleBtn.dragging { cursor: grabbing; transform: scale(1.1) !important; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
+
+        .tm-mobile-view #tabManager {
+            top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95);
+            width: 90vw;
+            max-width: 320px;
+            font-size: 13px;
+            max-height: 90vh;
+            padding: 15px;
+            border-radius: 16px;
+        }
+        .tm-mobile-view #tabManager.visible { transform: translate(-50%, -50%) scale(1); }
+        .tm-mobile-view #tabManager h2 { font-size: 16px; margin-bottom: 10px; text-align: center; }
+        .tm-mobile-view #tabManager h3 { font-size: 14px; margin-top: 10px; margin-bottom: 8px; font-weight: 500; }
+        .tm-mobile-view .close-btn { top: 6px; right: 8px; font-size: 30px;}
+
+        .tm-mobile-view .tab-info, .tm-mobile-view .account-selector {
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+        }
+        .tm-mobile-view .tab-info div { line-height: 1.6; }
+        
+        .tm-mobile-view .btn {
+            padding: 11px 12px;
+            font-size: 13px;
+            width: 100%;
+            margin: 4px 0 !important;
+            box-sizing: border-box;
+            flex-grow: 1;
+            font-weight: 500;
+            transform: none !important;
+        }
+        .tm-mobile-view .btn:hover { background: rgba(255,255,255,0.15); }
+
+        .tm-mobile-view .flex-row { flex-direction: column; gap: 0px !important; margin-top: 10px !important; }
+        
+        .tm-mobile-view div[name="importantNote"] { padding: 10px !important; font-size: 12px !important; margin-bottom: 12px !important; border-radius: 8px !important; }
+
+        .tm-mobile-view .account-item {
+            padding: 10px 12px;
+            font-size: 12px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        .tm-mobile-view .account-item > div:last-child {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .tm-mobile-view .account-item strong { font-size: 14px; }
+        .tm-mobile-view .account-item div[style*="font-size: 11px"] { font-size: 10px !important; }
+
+        .tm-mobile-view #toggleBtn { width: 48px; height: 48px; font-size: 20px; }
+    `);
+
+    class MultiTabAccountManager {
+        constructor() {
+            this.isToggling = false;
+            this.setupLanguage();
+            this.storageKey = 'saved_accounts_' + window.location.hostname;
+            this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+            this.tabId = this.getTabId();
+            this.accounts = GM_getValue(this.storageKey, {});
+            this.tabSessions = GM_getValue('tab_sessions', {});
+            this.currentAccount = null;
+            
+            if (this.isMobile) {
+                document.body.classList.add('tm-mobile-view');
+            }
+            
+            this.init();
+        }
+
+        init() {
+            this.createUI();
+            this.checkAndSetupCleanTab();
+            this.registerTab();
+            this.loadTabAccount();
+            this.setupDragging();
+            this.cleanupClosedTabs();
+            this.optimizeForCCCloudPhone();
+            setTimeout(() => this.ensureButtonIsVisible(), 1000);
+            setInterval(() => { this.updateTabActivity(); }, 5000);
+        }
+        
+        ensureButtonIsVisible() {
+            const toggleBtn = document.getElementById('toggleBtn');
+            if (!toggleBtn) return;
+            const rect = toggleBtn.getBoundingClientRect();
+            const winWidth = window.innerWidth; const winHeight = window.innerHeight;
+            let finalX = rect.left, finalY = rect.top, needsCorrection = false;
+            if (rect.width === 0 || rect.height === 0 || rect.top > winHeight || rect.left > winWidth) {
+                 finalX = winWidth - 60; finalY = winHeight / 2; needsCorrection = true;
+            } else {
+                if (finalX < 0) { finalX = 10; needsCorrection = true; }
+                if (finalY < 0) { finalY = 10; needsCorrection = true; }
+                if (finalX + rect.width > winWidth) { finalX = winWidth - rect.width - 10; needsCorrection = true; }
+                if (finalY + rect.height > winHeight) { finalY = winHeight - rect.height - 10; needsCorrection = true; }
+            }
+            if(needsCorrection) {
+                console.log("Account Manager: Correcting button position.");
+                toggleBtn.style.left = `${finalX}px`;
+                toggleBtn.style.top = `${finalY}px`;
+                GM_setValue('toggle_button_position', { top: finalY, left: finalX });
+            }
+        }
+
+        optimizeForCCCloudPhone() {
+            if (this.isMobile) {
+                const viewport = document.querySelector('meta[name="viewport"]');
+                if (viewport) {
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                } else {
+                    const newViewport = document.createElement('meta');
+                    newViewport.name = 'viewport';
+                    newViewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+                    document.head.appendChild(newViewport);
+                }
+            }
+        }
+
+        getLoginUrl() { const hostname = window.location.hostname; const path = loginPaths[hostname] || '/'; return window.location.origin + path; }
+        openNewCleanTab() { GM_setValue("clean_next_tab", true); const openUrl = this.getLoginUrl(); if (typeof GM_openInTab === "function") { GM_openInTab(openUrl, { active: true, insert: true, setParent: false }); } else { window.open(openUrl, "_blank"); } setTimeout(() => { alert(this.getText("alertNewTabOpened")); }, 100); }
+        openNewTabWithAccount() { const accountIds = Object.keys(this.accounts); if (accountIds.length === 0) { alert(this.getText("alertNoAccountsToOpen")); return; } const promptText = this.getText("promptSelectAccountForNewTab").replace("%d", accountIds.length).replace("%s", accountIds.map((id, index) => `${index + 1}. ${this.accounts[id].name}`).join("\n")); const selectedIndex = prompt(promptText); const index = parseInt(selectedIndex) - 1; if (index >= 0 && index < accountIds.length) { const nextTabData = { accountId: accountIds[index], hostname: window.location.hostname }; GM_setValue("next_tab_account_data", nextTabData); const openUrl = this.getLoginUrl(); if (typeof GM_openInTab === "function") { GM_openInTab(openUrl, { active: true, insert: true, setParent: false }); } else { window.open(openUrl, "_blank"); } setTimeout(() => { alert(this.getText("alertNewTabWithAccountOpened")); }, 100); } }
+        toggleMenu() { if (this.isToggling) return; this.isToggling = true; const panel = document.getElementById('tabManager'); const overlay = document.getElementById('tabManagerOverlay'); if (!panel) { this.isToggling = false; return; } const isVisible = panel.classList.contains('visible'); if (isVisible) { panel.classList.remove('visible'); overlay.style.opacity = '0'; setTimeout(() => { if (this.isMobile) overlay.style.display = 'none'; }, 200); } else { this.refreshUI(); if (this.isMobile) overlay.style.display = 'block'; setTimeout(() => { overlay.style.opacity = '1'; }, 10); panel.classList.add('visible'); } setTimeout(() => { this.isToggling = false; }, 300); }
+        setupLanguage() { const userLang = navigator.language.split('-')[0]; this.currentLang = translations[userLang] ? userLang : 'en'; }
+        getText(key) { return translations[this.currentLang][key] || translations['en'][key] || `[${key}]`; }
+        getTabId() { let tabId = sessionStorage.getItem('multiTabId'); if (!tabId) { tabId = 'tab_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8); sessionStorage.setItem('multiTabId', tabId); } return tabId; }
+        createUI() { const overlay = document.createElement('div'); overlay.id = 'tabManagerOverlay'; document.body.appendChild(overlay); const defaultPos = { top: 20, left: window.innerWidth - 80 }; const savedPos = GM_getValue('toggle_button_position', defaultPos); const toggleBtn = document.createElement('button'); toggleBtn.id = 'toggleBtn'; toggleBtn.innerHTML = '🗂️'; toggleBtn.title = this.getText('toggleButtonTitle'); toggleBtn.style.top = `${savedPos.top}px`; toggleBtn.style.left = `${savedPos.left}px`; document.body.appendChild(toggleBtn); const panel = document.createElement('div'); panel.id = 'tabManager'; panel.innerHTML = this.getUIHTML(); document.body.appendChild(panel); this.attachEvents(); }
+        setupDragging() { const toggleBtn = document.getElementById('toggleBtn'); if (!toggleBtn) return; let isDragging = false, hasMoved = false, lastPointerDownTime = 0, offsetX, offsetY; const startDrag = (e) => { if (e.type === 'mousedown') e.preventDefault(); hasMoved = false; isDragging = true; toggleBtn.classList.add('dragging'); document.body.style.userSelect = 'none'; lastPointerDownTime = Date.now(); const rect = toggleBtn.getBoundingClientRect(); const pointerX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX; const pointerY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY; offsetX = pointerX - rect.left; offsetY = pointerY - rect.top; toggleBtn.style.transition = 'none'; }; const doDrag = (e) => { if (!isDragging) return; if (e.type === 'touchmove') e.preventDefault(); const pointerX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX; const pointerY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY; if (!hasMoved && (Math.abs(pointerX - (toggleBtn.offsetLeft + offsetX)) > 5 || Math.abs(pointerY - (toggleBtn.offsetTop + offsetY)) > 5)) { hasMoved = true; } let newLeft = pointerX - offsetX; let newTop = pointerY - offsetY; newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - toggleBtn.offsetWidth)); newTop = Math.max(0, Math.min(newTop, window.innerHeight - toggleBtn.offsetHeight)); toggleBtn.style.left = `${newLeft}px`; toggleBtn.style.top = `${newTop}px`; }; const endDrag = () => { if (!isDragging) return; isDragging = false; toggleBtn.classList.remove('dragging'); document.body.style.userSelect = ''; toggleBtn.style.transition = ''; if (hasMoved) { GM_setValue('toggle_button_position', { top: parseInt(toggleBtn.style.top, 10), left: parseInt(toggleBtn.style.left, 10) }); } else { if (Date.now() - lastPointerDownTime < 300) { this.toggleMenu(); } } }; toggleBtn.addEventListener('mousedown', startDrag); document.addEventListener('mousemove', doDrag); document.addEventListener('mouseup', endDrag); toggleBtn.addEventListener('touchstart', startDrag, { passive: false }); document.addEventListener('touchmove', doDrag, { passive: false }); document.addEventListener('touchend', endDrag); }
+        getUIHTML() { return ` <button class="close-btn" id="closeManagerBtn" title="Close">×</button> <h2>🗂️ ${this.getText('managerTitle')}</h2> <div style="font-size:11px;text-align:center;opacity:0.7;padding-bottom:8px;">${this.getText('dragHint')}</div> <div name="importantNote"> ${this.getText('importantNote')} </div> <div class="tab-info current-tab"> <h3>${this.getText('currentTabTitle')}</h3> <div style="word-break:break-all;"><strong>${this.getText('tabIdLabel')}</strong> ${this.tabId}</div> <div><strong>${this.getText('accountLabel')}</strong> <span id="currentAccountName">${this.currentAccount ? this.accounts[this.currentAccount]?.name || this.getText('notSelected') : this.getText('notSelected')}</span></div> <div><strong>${this.getText('tabTypeLabel')}</strong> ${sessionStorage.getItem('isCleanTab') === 'true' ? this.getText('newTab') : this.getText('regularTab')}</div> <div class="flex-row"> <button class="btn btn-primary" id="saveAccountBtn">${this.getText('saveAccountBtn')}</button> <button class="btn btn-warning" id="clearTabBtn">${this.getText('resetTabBtn')}</button> </div> </div> <div class="account-selector"> <h3>${this.getText('selectAccountTitle')}</h3> <div id="accountList"></div> </div> <div style="display: flex; flex-direction: column; gap: 4px;"> <button class="btn btn-info" id="openCleanTabBtn">${this.getText('openCleanTabBtn')}</button> <button class="btn btn-info" id="openTabWithAccountBtn">${this.getText('openWithAccountBtn')}</button> <button class="btn btn-danger" id="clearAllAccountsBtn">${this.getText('deleteAllBtn')}</button> </div> <div style="text-align:center;font-size:10px;opacity:0.7;margin-top:12px" id="minhbeo8-watermark"> <a href="https://discord.gg/GJdRjPqH" target="_blank" style="color:#fffbe0;text-decoration:none;opacity:0.85;"> ${this.getText('madeBy')} </a> </div> `; }
+        attachEvents() { setTimeout(() => { this.updateAccountList(); document.getElementById('saveAccountBtn').onclick = () => this.saveCurrentAccount(); document.getElementById('clearTabBtn').onclick = () => this.clearCurrentTab(); document.getElementById('openCleanTabBtn').onclick = () => this.openNewCleanTab(); document.getElementById('openTabWithAccountBtn').onclick = () => this.openNewTabWithAccount(); document.getElementById('clearAllAccountsBtn').onclick = () => this.clearAllAccounts(); document.getElementById('closeManagerBtn').onclick = () => this.toggleMenu(); document.getElementById('tabManagerOverlay').onclick = () => this.toggleMenu(); }, 100); }
+        refreshUI() { this.updateAccountList(); this.updateCurrentAccountName(); }
+        updateCurrentAccountName() { const nameElement = document.getElementById('currentAccountName'); if (nameElement) { nameElement.textContent = this.currentAccount ? this.accounts[this.currentAccount]?.name || this.getText('notSelected') : this.getText('notSelected'); } }
+        updateAccountList() { const container = document.getElementById('accountList'); if (!container) return; const accountIds = Object.keys(this.accounts); if (accountIds.length === 0) { container.innerHTML = `<div style="text-align: center; opacity: 0.7;">${this.getText('noAccounts')}</div>`; return; } container.innerHTML = accountIds.map(accountId => { const account = this.accounts[accountId]; const isActive = this.currentAccount === accountId; return ` <div class="account-item ${isActive ? "active" : ""}" data-account-id="${accountId}"> <div> <strong>${account.name}</strong> <div style="font-size: 11px; opacity: 0.8;"> ${this.getText("savedAt")} ${new Date(account.created).toLocaleString()} </div> </div> <div style="display:flex;align-items:center;gap:5px;"> ${isActive ? `<span style="color: #4CAF50; font-size:11px; font-weight: bold;">${this.getText("inUse")}</span>` : ""} <button class="btn btn-danger btn-delete-account" style="padding: 5px 10px; font-size: 11px; background: rgba(244, 67, 54, 0.5); border-color: rgba(244, 67, 54, 0.7);" data-account-id="${accountId}">${this.getText("deleteBtn")}</button> </div> </div> `; }).join(''); container.querySelectorAll('.btn-delete-account').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); const aid = btn.getAttribute('data-account-id'); this.deleteAccount(aid); }; }); container.querySelectorAll('.account-item').forEach(item => { item.onclick = (e) => { if (e.target.classList.contains('btn-delete-account')) return; const aid = item.getAttribute('data-account-id'); this.selectAccount(aid); }; }); }
+        checkAndSetupCleanTab() { const shouldClean = GM_getValue("clean_next_tab", false); if (shouldClean) { GM_deleteValue("clean_next_tab"); this.forceCleanTab(); sessionStorage.setItem("isCleanTab", true); } }
+        forceCleanTab() { const keysToRemove = []; for (let i = 0; i < localStorage.length; i++) { const key = localStorage.key(i); if (key && !key.startsWith("GM_") && !key.includes("tampermonkey") && key !== "multiTabId" && !key.includes("greasemonkey")) { keysToRemove.push(key); } } keysToRemove.forEach(key => localStorage.removeItem(key)); this.clearAllCookies(); const sessionKeysToRemove = []; for (let i = 0; i < sessionStorage.length; i++) { const key = sessionStorage.key(i); if (key && key !== "multiTabId" && key !== "isCleanTab") { sessionKeysToRemove.push(key); } } sessionKeysToRemove.forEach(key => sessionStorage.removeItem(key)); }
+        clearAllCookies() { const getCookieDomains = () => { const hostname = window.location.hostname; const domains = ["", hostname, "." + hostname]; const parts = hostname.split("."); if (parts.length > 1) { const baseDomain = "." + parts.slice(-2).join("."); if (!domains.includes(baseDomain)) { domains.push(baseDomain); } } return [...new Set(domains)]; }; const cookies = document.cookie.split(";"); cookies.forEach(cookie => { const eqPos = cookie.indexOf("="); const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim(); if (name) { const domains = getCookieDomains(); const paths = ["/", "/toc-portal/", "/toc-portal", "/minified:xc"]; domains.forEach(domain => { paths.forEach(path => { document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}; domain=${domain}`; }); }); } }); }
+        registerTab() { this.tabSessions[this.tabId] = { id: this.tabId, url: window.location.href, title: document.title || "Cloud Phone", lastActivity: Date.now(), account: this.currentAccount, created: this.tabSessions[this.tabId]?.created || Date.now(), isClean: sessionStorage.getItem("isCleanTab") === "true" }; GM_setValue("tab_sessions", this.tabSessions); }
+        updateTabActivity() { if (this.tabSessions[this.tabId]) { this.tabSessions[this.tabId].lastActivity = Date.now(); this.tabSessions[this.tabId].account = this.currentAccount; GM_setValue("tab_sessions", this.tabSessions); } }
+        cleanupClosedTabs() { const now = Date.now(); let changed = false; Object.keys(this.tabSessions).forEach(tabId => { if (tabId !== this.tabId && now - this.tabSessions[tabId].lastActivity > 30000) { delete this.tabSessions[tabId]; changed = true; } }); if (changed) { GM_setValue("tab_sessions", this.tabSessions); } }
+        loadTabAccount() { const tabInfo = this.tabSessions[this.tabId]; if (tabInfo && tabInfo.account && this.accounts[tabInfo.account] && !tabInfo.isClean) { this.currentAccount = tabInfo.account; this.applyAccount(this.accounts[tabInfo.account]); } }
+        saveCurrentAccount() { const accountName = prompt(this.getText("promptForAccountName")); if (!accountName || !accountName.trim()) return; const accountId = "acc_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6); const accountData = { id: accountId, name: accountName.trim(), localStorage: this.getCurrentLocalStorage(), cookies: this.getCurrentCookies(), created: Date.now() }; this.accounts[accountId] = accountData; GM_setValue(this.storageKey, this.accounts); this.currentAccount = accountId; sessionStorage.removeItem("isCleanTab"); this.registerTab(); alert(this.getText("alertAccountSaved").replace("%s", accountName.trim())); this.refreshUI(); }
+        selectAccount(accountId) { if (!this.accounts[accountId]) return; const account = this.accounts[accountId]; this.clearCurrentData(); setTimeout(() => { this.applyAccount(account); this.currentAccount = accountId; sessionStorage.removeItem("isCleanTab"); this.registerTab(); alert(this.getText("alertAccountSwitched").replace("%s", account.name)); setTimeout(() => location.reload(), 1000); }, 500); }
+        applyAccount(account) { const getBaseDomain = () => { const hostname = window.location.hostname; const parts = hostname.split("."); return parts.length > 1 ? "." + parts.slice(-2).join(".") : "." + hostname; }; const baseDomain = getBaseDomain(); Object.entries(account.localStorage).forEach(([key, value]) => { try { if (key !== "multiTabId") { localStorage.setItem(key, value); } } catch (e) { /* Do nothing */ } }); Object.entries(account.cookies).forEach(([name, value]) => { document.cookie = `${name}=${value}; path=/; domain=${baseDomain}; max-age=86400`; }); }
+        clearCurrentTab() { if (confirm(this.getText("confirmResetTab"))) { this.clearCurrentData(); this.currentAccount = null; sessionStorage.setItem("isCleanTab", true); this.registerTab(); alert(this.getText("alertTabReset")); setTimeout(() => location.reload(), 1000); } }
+        clearCurrentData() { const keysToRemove = []; for (let i = 0; i < localStorage.length; i++) { const key = localStorage.key(i); if (key && !key.startsWith("GM_") && !key.includes("tampermonkey") && key !== "multiTabId") { keysToRemove.push(key); } } keysToRemove.forEach(key => localStorage.removeItem(key)); this.clearAllCookies(); }
+        deleteAccount(accountId) { const account = this.accounts[accountId]; if (confirm(this.getText("confirmDeleteAccount").replace("%s", account.name))) { delete this.accounts[accountId]; GM_setValue(this.storageKey, this.accounts); if (this.currentAccount === accountId) { this.currentAccount = null; this.registerTab(); } this.refreshUI(); alert(this.getText("alertAccountDeleted").replace("%s", account.name)); } }
+        clearAllAccounts() { if (confirm(this.getText("confirmDeleteAll"))) { this.accounts = {}; GM_setValue(this.storageKey, {}); this.currentAccount = null; this.registerTab(); this.refreshUI(); alert(this.getText("alertAllDeleted")); } }
+        getCurrentLocalStorage() { const data = {}; for (let i = 0; i < localStorage.length; i++) { const key = localStorage.key(i); if (key && !key.startsWith("GM_") && !key.includes("tampermonkey") && key !== "multiTabId") { data[key] = localStorage.getItem(key); } } return data; }
+        getCurrentCookies() { const cookies = {}; document.cookie.split(";").forEach(cookie => { const [name, value] = cookie.trim().split("="); if (name && value) { cookies[name] = value; } }); return cookies; }
+        checkNewTabAccount() { const nextTabData = GM_getValue("next_tab_account_data", null); if (nextTabData && nextTabData.hostname === window.location.hostname) { const storageKeyForNextTab = "saved_accounts_" + nextTabData.hostname; const accountsForNextTab = GM_getValue(storageKeyForNextTab, {}); if (accountsForNextTab[nextTabData.accountId]) { GM_deleteValue("next_tab_account_data"); setTimeout(() => { this.selectAccount(nextTabData.accountId); }, 2000); } } else if (nextTabData) { GM_deleteValue("next_tab_account_data"); } }
+    }
+
+    function init() {
+        new MultiTabAccountManager();
+    }
+    
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        init();
+    } else {
+        window.addEventListener('load', init, false);
+    }
+})();
