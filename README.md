@@ -1,7 +1,7 @@
 # Multi-Tab Account Manager
 
 <p align="center">
-  <img src="[https://i.postimg.cc/vZVLVnCP/eddf18a0812c3cd1b5e92cf80158cc86-edit-525557047898993.png)" alt="script icon" width="128">
+  <img src="[https://i.postimg.cc/vZVLVnCP/eddf18a0812c3cd1b5e92cf80158cc86-edit-525557047898993.png]" alt="script icon" width="128">
 </p>
 
 <p align="center">
@@ -102,7 +102,7 @@ Bạn cần một trình quản lý userscript để sử dụng script này. **
 *   [Cài cho Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 *   [Cài cho Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
 *   [Cài cho Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
-* các trình duyệt khác như lemur,kiwi,quetta,via browser,.... 
+*   [các trình duyệt khác như lemur,kiwi,quetta,via browser,....] 
 **Bước 2: Cài Đặt Script**
 
 Nhấp vào liên kết bên dưới để cài đặt script loader. Tampermonkey sẽ tự động mở ra một trang cài đặt.
