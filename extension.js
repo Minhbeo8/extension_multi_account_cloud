@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Multi-Tab Account Manager
 // @namespace    http://tampermonkey.net/
-// @version      5.8.0
+// @version      3.0.0
 // @description  update more cloud phone
 // @author       Minhbeo8 (hominz) 
 // @match        https://www.ugphone.com/*
