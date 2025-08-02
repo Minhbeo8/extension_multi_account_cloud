@@ -66,6 +66,7 @@ You need a browser that supports Chrome extensions.
 Paste the link below into the search bar. Tampermonkey will automatically open an installation page.
 
 https://raw.githubusercontent.com/Minhbeo8/extension_multi_Browser/refs/heads/main/multi-tab-account-manager.user.js
+
 **Step 3: All Done!**
 
 The script is now installed! Just navigate to one of the supported websites, and you will see the floating icon.
