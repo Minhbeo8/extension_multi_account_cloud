@@ -168,4 +168,4 @@ Script đã được cài đặt! Bạn chỉ cần truy cập một trong nhữ
 
 ### Giấy Phép
 
-Dự án này được cấp phép theo Giấy phép MIT.
+Dự án này được cấp phép theo Giấy phép[MIT License](./LICENSE).
