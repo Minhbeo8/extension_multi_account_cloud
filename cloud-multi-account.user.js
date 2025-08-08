@@ -24,10 +24,7 @@
 (function () {
     'use strict';
 
-    
-    const encodedUrl = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL01pbmhiZW84L2V4dGVuc2lvbl9tdWx0aV9Ccm93c2VyL3JlZnMv
-aGVhZHMvbWFpbi9leHRlbnNpb24uanM=";
-
+    const encodedUrl = "aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL01pbmhiZW84L2V4dGVuc2lvbl9tdWx0aV9Ccm93c2VyL3JlZnMvaGVhZHMvbWFpbi9leHRlbnNpb24uanM=";
     const sourceUrl = atob(encodedUrl);
 
     GM_xmlhttpRequest({
