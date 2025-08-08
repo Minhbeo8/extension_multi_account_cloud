@@ -222,7 +222,7 @@
             const lowerCaseFilter = filter.toLowerCase().trim();
             let accountIds = Object.keys(this.accounts).filter(id => this.accounts[id].name.toLowerCase().includes(lowerCaseFilter));
             
-            // Sort: favorites first, then by creation date (newest first)
+            
             accountIds.sort((a, b) => {
                 const accA = this.accounts[a];
                 const accB = this.accounts[b];
