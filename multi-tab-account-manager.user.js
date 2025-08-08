@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Multi-Tab Account Manager
 // @namespace    http://tampermonkey.net/
-// @version      3.0.0
+// @version      7.6.0
 // @author       Minhbeo8 (hominz)
 // @icon         https://i.postimg.cc/Jhcr8R5L/hominz-png-4.png
 // @match        https://www.ugphone.com/*
