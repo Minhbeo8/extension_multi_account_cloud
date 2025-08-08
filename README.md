@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-3.0.0-blue" alt="version">
+  <img src="https://img.shields.io/badge/véion-7.6.0-blue" alt="version">
   <img src="https://img.shields.io/badge/author-Minhbeo8%20(hominz)-brightgreen" alt="author">
   <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="license">
   <img src="https://img.shields.io/badge/platform-Tampermonkey-orange" alt="platform">
