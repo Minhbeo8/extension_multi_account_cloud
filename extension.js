@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      7.6.0
 // @description  thêm vài thứ
-// @author       Minhbeo8
+// @author       Minhbeo8(hominz)
 // @match        https://www.ugphone.com/*
 // @match        https://ugphone.com/*
 // @match        https://cloud.vsphone.com/*
