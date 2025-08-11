@@ -164,7 +164,7 @@ Script đã được cài đặt! Bạn chỉ cần truy cập một trong nhữ
 
 Được làm với ❤️ bởi **Minhbeo8 (hominz)**.
 
-[Ghé thăm GitHub của tôi](https://github.com/Minhnobeo)
+[Ghé thăm GitHub của tôi](https://github.com/Minhbeo8)
 
 ### Giấy Phép
 
