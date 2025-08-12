@@ -3,6 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      7.6.0
 // @author       Minhbeo8 (hominz)
+// @license      MIT
 // @icon         https://i.postimg.cc/Jhcr8R5L/hominz-png-4.png
 // @match        https://www.ugphone.com/*
 // @match        https://ugphone.com/*
