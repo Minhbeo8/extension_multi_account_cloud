@@ -2,6 +2,7 @@
 // @name         Multi-Tab Account Manager (UX & Feature Update)
 // @namespace    http://tampermonkey.net/
 // @version      7.6.0
+// @license      MIT
 // @description  thêm vài thứ
 // @author       Minhbeo8(hominz)
 // @match        https://www.ugphone.com/*
